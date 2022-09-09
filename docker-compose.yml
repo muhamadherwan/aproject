@@ -1,0 +1,57 @@
+version: "3.8"
+
+services:
+
+    # PHP Service
+    app:
+        build:
+            context: .
+            # target the php in Dockerfile
+            target: php
+            args:
+                - APP_ENV=${APP_ENV}
+        environment:
+            - APP_ENV=${APP_ENV}
+            - CONTAINER_ROLE=app
+        container_name: apkv-app
+        working_dir: /var/www
+        # sync local dir to php container webroot
+        volumes:
+            - ./:/var/www
+        # we can map the ports to different port.
+        ports:
+            - "8000:8000"
+        # build mysql and redis container 1st, then build this container.
+        #        entrypoint:
+        #            - ./entrypoint.sh
+        depends_on:
+            - db
+            - redis
+
+    # Mysql server
+    db:
+        image: mysql:8.0
+        container_name: apkv-db
+        ports:
+            - "3306:3306"
+        # database details
+        environment:
+            - MYSQL_DATABASE=${DB_DATABASE}
+            - MYSQL_USER=${DB_USERNAME}
+            - MYSQL_PASSWORD=${DB_PASSWORD}
+            - MYSQL_ROOT_PASSWORD=${DB_PASSWORD}
+        # sync local dir with container dir for stored db data
+        volumes:
+            - db-data:/var/lib/mysql
+
+    # Redis Server
+    redis:
+        image: redis:alpine
+        container_name: apkv-redis
+        command: redis-server --appendonly yes --requirepass  "${REDIS_PASSWORD}"
+        ports:
+            - "6379:6379"
+
+# place to stored the db data
+volumes:
+    db-data: ~
