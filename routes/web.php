@@ -42,13 +42,9 @@ Route::prefix('marks-academic')->group(function () {
 });
 
 // Penjanaan Gred
-
 Route::prefix('grade')->group(function () {
-    Route::resource('academics', ScoreAcademicController::class);
-});
-
-Route::prefix('grade')->group(function () {
-    Route::resource('academics', GradeAcademicController::class);
+    Route::get('academics', [GradeAcademicController::class, 'create'])->name('grade.academics.create');
+    Route::post('academics/generate',[GradeAcademicController::class, 'store'])->name('grade.academics.store');
 
     Route::resource('vocationals', GradeVocationalController::class);
     Route::get('getColleges/', [GradeVocationalController::class, 'getColleges']);

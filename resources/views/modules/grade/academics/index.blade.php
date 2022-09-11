@@ -22,5 +22,3 @@
     @endcomponent
 
 @endsection
-
-@endsection
