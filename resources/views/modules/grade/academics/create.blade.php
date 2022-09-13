@@ -53,27 +53,120 @@
                         @csrf
 
                         <div class="row">
-
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                                 <div class="mb-3">
-                                    <label for="statusUser" class="form-label">STATUS <span
+                                    <label for="statusUser" class="form-label">NEGERI <span
                                             class="input-required">*</span></label>
                                     <select name="status" class="form-select">
-                                        <option disabled value="">Sila Pilih</option>
-                                        <option selected value="1">Aktif</option>
-                                        <option value="2">Tidak Aktif</option>
+                                        <option selected disabled value="">Sila Pilih</option>
+                                        <option value="1">Johor</option>
+                                        <option value="2">Kedah</option>
+                                        <option value="2">Kelantan</option>
+                                        <option value="2">Melaka</option>
+                                        <option value="2">Negeri Sembilan</option>
+                                        <option value="2">Pahang</option>
+                                        <option value="2">Perak</option>
+                                        <option value="2">Perlis</option>
+                                        <option value="2">Pulau Pinang</option>
+                                        <option value="2">Sabah</option>
+                                        <option value="2">Sarawak</option>
+                                        <option value="2">Selangor</option>
+                                        <option value="2">Terengganu</option>
+                                        <option value="2">WP Kuala Lumpur</option>
+                                        <option value="2">WP Labuan</option>
                                     </select>
                                 </div>
                             </div>
 
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                                 <div class="mb-3">
-                                    <label for="phonenumber" class="form-label">NOMBOR TELEFON</label>
-                                    <input id="phonenumber" name="phonenumber" class="form-control">
+                                    <label for="statusUser" class="form-label">JENIS KOLEJ <span
+                                            class="input-required">*</span></label>
+                                    <select name="status" class="form-select">
+                                        <option disabled value="">Sila Pilih</option>
+                                        <option value="1">ILKA</option>
+                                        <option value="2">ILKS</option>
+                                        <option selected value="3">KPM</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-md-4">
+                                <div class="mb-5">
+                                    <label for="statusUser" class="form-label">NAMA KOLEJ <span
+                                            class="input-required">*</span></label>
+                                    <select name="status" class="form-select">
+                                        <option selected disabled value="">Sila Pilih</option>
+                                        <option value="1">Kolej Vokasional (ERT) Azizah</option>
+                                        <option value="2">Kolej Vokasional Batu Pahat</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="row">
+                            <div class="col-md-3">
+                                <div class="mb-3">
+                                    <label for="statusUser" class="form-label">KOHORT <span
+                                            class="input-required">*</span></label>
+                                    <select name="status" class="form-select">
+                                        <option disabled value="">Sila Pilih</option>
+                                        <option selected value="1">2012</option>
+                                        <option value="2">2013</option>
+                                        <option value="2">2014</option>
+                                        <option value="2">2015</option>
+                                        <option value="2">2016</option>
+                                        <option value="2">2016</option>
+                                        <option value="2">2017</option>
+                                        <option value="2">2018</option>
+                                        <option value="2">2019</option>
+                                        <option value="2">2020</option>
+                                        <option value="2">2021</option>
+                                        <option value="2">2022</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-md-3">
+                                <div class="mb-3">
+                                    <label for="statusUser" class="form-label">SEMESTER <span
+                                            class="input-required">*</span></label>
+                                    <select name="status" class="form-select">
+                                        <option selected disabled value="">Sila Pilih</option>
+                                        <option value="1">1</option>
+                                        <option value="2">2</option>
+                                        <option value="3">3</option>
+                                        <option value="4">4</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-md-3">
+                                <div class="mb-3">
+                                    <label for="statusUser" class="form-label">SESI PENGAMBILAN <span
+                                            class="input-required">*</span></label>
+                                    <select name="status" class="form-select">
+                                        <option disabled value="">Sila Pilih</option>
+                                        <option selected  value="1">1</option>
+                                        <option value="2">2</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-md-3">
+                                <div class="mb-3">
+                                    <label for="statusUser" class="form-label">KOD PROGRAM <span
+                                            class="input-required">*</span></label>
+                                    <select name="status" class="form-select">
+                                        <option disabled value="">Sila Pilih</option>
+                                        <option selected value="1">SEMUA</option>
+                                    </select>
                                 </div>
                             </div>
 
                         </div>
+
 
                         <hr class="my-4">
 
