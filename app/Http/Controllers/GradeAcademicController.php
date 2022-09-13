@@ -53,6 +53,8 @@ class GradeAcademicController extends Controller
                 $studentsDetailsFk = $student->id; // will use only this in prod
 
                 $totalMark = $this->setTotalMarks($student);
+//                exit;
+
                 $gradeRow = Grade::where('students_details_fk', $studentsDetailsFk)->count();
                 if ($gradeRow == 0) { Grade::create(['students_details_fk' => $studentsDetailsFk]); }
                 $graded = $this->setGrade($studentsDetailsFk);
@@ -77,6 +79,7 @@ class GradeAcademicController extends Controller
     private function setTotalMarks($student)
     {
         $bm = ( $student->semester != 4 ) ? $this->setTmBM($student) : $this->setTmBM4($student);
+        $bi = $this->setTmBI($student);
     }
 
     /**
@@ -95,13 +98,10 @@ class GradeAcademicController extends Controller
         $markB1 = MarksAcademic::where('students_details_fk', $student->id)->where('subject_academics_fk', 1)->get('mark_b1');
         $markA1 = MarksAcademic::where('students_details_fk', $student->id)->where('subject_academics_fk', 1)->get('mark_a1');
 
-//        $markB1[0]->mark_b1 = 1;
-//        $markA1[0]->mark_a1 = -1;
-
         if ( ($markB1[0]->mark_b1 ==  -1) || ($markA1[0]->mark_a1 == -1) )
         {
             MarksAcademic::where('students_details_fk', $student->id)
-                ->where('subject_academics_fk', 1)
+                ->where('subject_academics_fk', $student->subject)
                 ->update(['total_marks' => -1]);
         } else {
             $wajaran_berterusan = $this->getWajaranBerterusan($student);
@@ -112,7 +112,48 @@ class GradeAcademicController extends Controller
             $totalMarks = $twb + $twa;
 
             MarksAcademic::where('students_details_fk', $student->id)
-                ->where('subject_academics_fk', 1)
+                ->where('subject_academics_fk', $student->subject)
+                ->update(['total_marks' => $totalMarks]);
+        }
+    }
+
+    /**
+     * Set subjects BI total mark for All Sememster
+     *
+     * @param
+     * @return void
+     */
+    private function setTmBI($student):void
+    {
+        // for dev only. will remove!
+        $student->id = 1786;
+
+        $student->subject = 2;
+
+        $markB1 = MarksAcademic::where('students_details_fk', $student->id)->where('subject_academics_fk', 2)->get('mark_b1');
+        $markA1 = MarksAcademic::where('students_details_fk', $student->id)->where('subject_academics_fk', 2)->get('mark_a1');
+
+//        print $markB1[0]->mark_b1;exit;
+//        print $markA1[0]->mark_a1;exit;
+
+        if ( ($markB1[0]->mark_b1 ==  -1) || ($markA1[0]->mark_a1 == -1) )
+        {
+            MarksAcademic::where('students_details_fk', $student->id)
+                ->where('subject_academics_fk', $student->subject)
+                ->update(['total_marks' => -1]);
+        } else {
+            $wajaran_berterusan = $this->getWajaranBerterusan($student);
+            $wajaran_akhir = $this->getWajaranAkhir($student);
+
+//            print $wajaran_berterusan[0]->continuous;exit;
+//            print $wajaran_akhir[0]->final1;exit;
+
+            $twb = ceil(($markB1[0]->mark_b1 / 100) * $wajaran_berterusan[0]->continuous);
+            $twa = ceil(($markA1[0]->mark_a1 / 100) * $wajaran_akhir[0]->final1);
+            $totalMarks = $twb + $twa;
+
+            MarksAcademic::where('students_details_fk', $student->id)
+                ->where('subject_academics_fk', $student->subject)
                 ->update(['total_marks' => $totalMarks]);
         }
     }
@@ -151,7 +192,7 @@ class GradeAcademicController extends Controller
      * @param
      * @return void
      */
-    private function setTotalMarksSem4($subject, $kohort, $year, $semester)
+    private function setTmBM4($student)
     {
         // do logic for sem 4...
     }
