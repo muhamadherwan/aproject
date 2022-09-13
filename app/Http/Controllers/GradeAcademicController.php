@@ -100,9 +100,7 @@ class GradeAcademicController extends Controller
 
         if ( ($markB1[0]->mark_b1 ==  -1) || ($markA1[0]->mark_a1 == -1) )
         {
-            MarksAcademic::where('students_details_fk', $student->id)
-                ->where('subject_academics_fk', $student->subject)
-                ->update(['total_marks' => -1]);
+            $this->setTotalMarksNegative($student);
         } else {
             $wajaran_berterusan = $this->getWajaranBerterusan($student);
             $wajaran_akhir = $this->getWajaranAkhir($student);
@@ -118,7 +116,7 @@ class GradeAcademicController extends Controller
     }
 
     /**
-     * Set subjects BI total mark for All Sememster
+     * Set subjects BI total mark for All Semester
      *
      * @param
      * @return void
@@ -133,20 +131,12 @@ class GradeAcademicController extends Controller
         $markB1 = MarksAcademic::where('students_details_fk', $student->id)->where('subject_academics_fk', 2)->get('mark_b1');
         $markA1 = MarksAcademic::where('students_details_fk', $student->id)->where('subject_academics_fk', 2)->get('mark_a1');
 
-//        print $markB1[0]->mark_b1;exit;
-//        print $markA1[0]->mark_a1;exit;
-
         if ( ($markB1[0]->mark_b1 ==  -1) || ($markA1[0]->mark_a1 == -1) )
         {
-            MarksAcademic::where('students_details_fk', $student->id)
-                ->where('subject_academics_fk', $student->subject)
-                ->update(['total_marks' => -1]);
+            $this->setTotalMarksNegative($student);
         } else {
             $wajaran_berterusan = $this->getWajaranBerterusan($student);
             $wajaran_akhir = $this->getWajaranAkhir($student);
-
-//            print $wajaran_berterusan[0]->continuous;exit;
-//            print $wajaran_akhir[0]->final1;exit;
 
             $twb = ceil(($markB1[0]->mark_b1 / 100) * $wajaran_berterusan[0]->continuous);
             $twa = ceil(($markA1[0]->mark_a1 / 100) * $wajaran_akhir[0]->final1);
@@ -156,6 +146,19 @@ class GradeAcademicController extends Controller
                 ->where('subject_academics_fk', $student->subject)
                 ->update(['total_marks' => $totalMarks]);
         }
+    }
+
+    /**
+     * Set subjects total mark to "-1"
+     *
+     * @param
+     * @return void
+     */
+    private function setTotalMarksNegative($student)
+    {
+        MarksAcademic::where('students_details_fk', $student->id)
+            ->where('subject_academics_fk', $student->subject)
+            ->update(['total_marks' => -1]);
     }
 
     /**
