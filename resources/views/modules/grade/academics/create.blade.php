@@ -55,32 +55,31 @@
                         <div class="row">
                             <div class="col-md-4">
                                 <div class="mb-3">
-                                    <label for="statusUser" class="form-label">NEGERI <span
-                                            class="input-required">*</span></label>
-                                    <select name="status" class="form-select">
+                                    <label for="negeri" class="form-label">NEGERI <span class="input-required">*</span></label>
+                                    <select name="negeri" class="form-select">
                                         <option selected disabled value="">Sila Pilih</option>
                                         <option value="1">Johor</option>
                                         <option value="2">Kedah</option>
-                                        <option value="2">Kelantan</option>
-                                        <option value="2">Melaka</option>
-                                        <option value="2">Negeri Sembilan</option>
-                                        <option value="2">Pahang</option>
-                                        <option value="2">Perak</option>
-                                        <option value="2">Perlis</option>
-                                        <option value="2">Pulau Pinang</option>
-                                        <option value="2">Sabah</option>
-                                        <option value="2">Sarawak</option>
-                                        <option value="2">Selangor</option>
-                                        <option value="2">Terengganu</option>
-                                        <option value="2">WP Kuala Lumpur</option>
-                                        <option value="2">WP Labuan</option>
+                                        <option value="3">Kelantan</option>
+                                        <option value="4">Melaka</option>
+                                        <option value="5">Negeri Sembilan</option>
+                                        <option value="6">Pahang</option>
+                                        <option value="7">Perak</option>
+                                        <option value="8">Perlis</option>
+                                        <option value="9">Pulau Pinang</option>
+                                        <option value="10">Sabah</option>
+                                        <option value="11">Sarawak</option>
+                                        <option value="12">Selangor</option>
+                                        <option value="13">Terengganu</option>
+                                        <option value="14">WP Kuala Lumpur</option>
+                                        <option value="15">WP Labuan</option>
                                     </select>
                                 </div>
                             </div>
 
                             <div class="col-md-4">
                                 <div class="mb-3">
-                                    <label for="statusUser" class="form-label">JENIS KOLEJ <span
+                                    <label for="courses_fk" class="form-label">JENIS KOLEJ <span
                                             class="input-required">*</span></label>
                                     <select name="status" class="form-select">
                                         <option disabled value="">Sila Pilih</option>
@@ -93,7 +92,7 @@
 
                             <div class="col-md-4">
                                 <div class="mb-5">
-                                    <label for="statusUser" class="form-label">NAMA KOLEJ <span
+                                    <label for="colleges_fk" class="form-label">NAMA KOLEJ <span
                                             class="input-required">*</span></label>
                                     <select name="status" class="form-select">
                                         <option selected disabled value="">Sila Pilih</option>
@@ -108,7 +107,7 @@
                         <div class="row">
                             <div class="col-md-3">
                                 <div class="mb-3">
-                                    <label for="statusUser" class="form-label">KOHORT <span
+                                    <label for="year" class="form-label">KOHORT <span
                                             class="input-required">*</span></label>
                                     <select name="status" class="form-select">
                                         <option disabled value="">Sila Pilih</option>
@@ -130,7 +129,7 @@
 
                             <div class="col-md-3">
                                 <div class="mb-3">
-                                    <label for="statusUser" class="form-label">SEMESTER <span
+                                    <label for="semester" class="form-label">SEMESTER <span
                                             class="input-required">*</span></label>
                                     <select name="status" class="form-select">
                                         <option selected disabled value="">Sila Pilih</option>
@@ -144,7 +143,7 @@
 
                             <div class="col-md-3">
                                 <div class="mb-3">
-                                    <label for="statusUser" class="form-label">SESI PENGAMBILAN <span
+                                    <label for="session" class="form-label">SESI PENGAMBILAN <span
                                             class="input-required">*</span></label>
                                     <select name="status" class="form-select">
                                         <option disabled value="">Sila Pilih</option>
@@ -232,3 +231,4 @@
     <!-- form advanced init -->
     <script src="{{ URL::asset('/assets/js/pages/form-advanced.init.js') }}"></script>
 @endsection
+

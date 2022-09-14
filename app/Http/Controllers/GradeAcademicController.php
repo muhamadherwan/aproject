@@ -13,8 +13,6 @@ class GradeAcademicController extends Controller
 {
     /**
      * Show the form for creating a new resource.
-     *
-     * @return
      */
     public function create()
     {
@@ -23,19 +21,12 @@ class GradeAcademicController extends Controller
 
     /**
      * Store a newly created resource in storage.
-     *
      * @param  \Illuminate\Http\Request  $request
      * @return
      */
     public function store(Request $request): \Illuminate\Http\RedirectResponse
     {
-        $students = StudentsDetail::where('colleges_fk', $colleges_fk)
-          ->where('year', $year)
-          ->where('semester', $semester)
-          ->where('session', $session)
-          ->where('courses_fk', $courses_fk)
-          ->get(['id', 'semester', 'year']);
-
+        $students = $this->getStudents($request);
 //        print count($students);exit;
 
         if ( count($students) > 0)
@@ -48,16 +39,31 @@ class GradeAcademicController extends Controller
                 if ($gradeRow == 0) { Grade::create(['students_details_fk' => $studentsDetailsFk]); }
                 $graded = $this->setGrade($studentsDetailsFk);
             }
-
             return redirect()->route( 'grade.academics.create')
                 ->with('success', 'Gred akademik berjaya dijana.');
-
         }
 
         return redirect()->route( 'grade.academics.create')
             ->with('error', 'Gred akademik gagal dijana.');
 
     }
+
+    /**
+     * Get students based on request.
+     * @param $student
+     * @return
+     */
+    public function getStudents(Request $request)
+    {
+        dd($request->all());
+        return $students = StudentsDetail::where('colleges_fk', $colleges_fk)
+            ->where('year', $year)
+            ->where('semester', $semester)
+            ->where('session', $session)
+            ->where('courses_fk', $courses_fk)
+            ->get(['id', 'semester', 'year']);
+    }
+
 
     /**
      * Set student subjects total mark based on subject.

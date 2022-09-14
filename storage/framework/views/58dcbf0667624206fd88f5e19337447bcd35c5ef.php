@@ -53,25 +53,24 @@
                         <div class="row">
                             <div class="col-md-4">
                                 <div class="mb-3">
-                                    <label for="statusUser" class="form-label">NEGERI <span
-                                            class="input-required">*</span></label>
-                                    <select name="status" class="form-select">
+                                    <label for="negeri" class="form-label">NEGERI <span class="input-required">*</span></label>
+                                    <select name="negeri" class="form-select">
                                         <option selected disabled value="">Sila Pilih</option>
                                         <option value="1">Johor</option>
                                         <option value="2">Kedah</option>
-                                        <option value="2">Kelantan</option>
-                                        <option value="2">Melaka</option>
-                                        <option value="2">Negeri Sembilan</option>
-                                        <option value="2">Pahang</option>
-                                        <option value="2">Perak</option>
-                                        <option value="2">Perlis</option>
-                                        <option value="2">Pulau Pinang</option>
-                                        <option value="2">Sabah</option>
-                                        <option value="2">Sarawak</option>
-                                        <option value="2">Selangor</option>
-                                        <option value="2">Terengganu</option>
-                                        <option value="2">WP Kuala Lumpur</option>
-                                        <option value="2">WP Labuan</option>
+                                        <option value="3">Kelantan</option>
+                                        <option value="4">Melaka</option>
+                                        <option value="5">Negeri Sembilan</option>
+                                        <option value="6">Pahang</option>
+                                        <option value="7">Perak</option>
+                                        <option value="8">Perlis</option>
+                                        <option value="9">Pulau Pinang</option>
+                                        <option value="10">Sabah</option>
+                                        <option value="11">Sarawak</option>
+                                        <option value="12">Selangor</option>
+                                        <option value="13">Terengganu</option>
+                                        <option value="14">WP Kuala Lumpur</option>
+                                        <option value="15">WP Labuan</option>
                                     </select>
                                 </div>
                             </div>
@@ -230,5 +229,6 @@
     <!-- form advanced init -->
     <script src="<?php echo e(URL::asset('/assets/js/pages/form-advanced.init.js')); ?>"></script>
 <?php $__env->stopSection(); ?>
+
 
 <?php echo $__env->make('layouts.master', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH /var/www/resources/views/modules/grade/academics/create.blade.php ENDPATH**/ ?>
