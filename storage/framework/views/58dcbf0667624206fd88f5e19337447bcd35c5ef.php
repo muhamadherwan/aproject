@@ -3,16 +3,8 @@
 <?php $__env->stopSection(); ?>
 
 <?php $__env->startSection('css'); ?>
-    <link href="<?php echo e(URL::asset('/assets/libs/select2/select2.min.css')); ?>" rel="stylesheet" type="text/css"/>
-    <link href="<?php echo e(URL::asset('/assets/libs/bootstrap-datepicker/bootstrap-datepicker.min.css')); ?>" rel="stylesheet"
-          type="text/css">
-    <link href="<?php echo e(URL::asset('/assets/libs/spectrum-colorpicker/spectrum-colorpicker.min.css')); ?>" rel="stylesheet"
-          type="text/css">
-    <link href="<?php echo e(URL::asset('/assets/libs/bootstrap-timepicker/bootstrap-timepicker.min.css')); ?>" rel="stylesheet"
-          type="text/css">
-    <link href="<?php echo e(URL::asset('/assets/libs/bootstrap-touchspin/bootstrap-touchspin.min.css')); ?>" rel="stylesheet"
-          type="text/css"/>
-    <link rel="stylesheet" href="<?php echo e(URL::asset('/assets/libs/datepicker/datepicker.min.css')); ?>">
+    
+    <link href="<?php echo e(URL::asset('/assets/libs/datatables/datatables.min.css')); ?>" rel="stylesheet" type="text/css"/>
 
     <link href="<?php echo e(URL::asset('/assets/libs/sweetalert2/sweetalert2.min.css')); ?>" rel="stylesheet" type="text/css"/>
 <?php $__env->stopSection(); ?>
@@ -20,197 +12,338 @@
 <?php $__env->startSection('content'); ?>
     <?php $__env->startComponent('components.breadcrumb'); ?>
         <?php $__env->slot('li_1'); ?>
-            Penjanaan
+            Penjanaan Gred
         <?php $__env->endSlot(); ?>
         <?php $__env->slot('title'); ?>
-            Gred Akademik
+            Akademik
         <?php $__env->endSlot(); ?>
     <?php echo $__env->renderComponent(); ?>
 
-    <?php if($message = Session::get('success')): ?>
-        <div class="alert alert-success">
-            <p><?php echo e($message); ?></p>
-        </div>
-    <?php endif; ?>
+<?php if($message = Session::get('success')): ?>
+    <div class="alert alert-success">
+        <p><?php echo e($message); ?></p>
+    </div>
+<?php endif; ?>
 
-    <?php if($message = Session::get('error')): ?>
-        <div class="alert alert-danger">
-            <p><?php echo e($message); ?></p>
-        </div>
-    <?php endif; ?>
+<?php if($message = Session::get('error')): ?>
+    <div class="alert alert-danger">
+        <p><?php echo e($message); ?></p>
+    </div>
+<?php endif; ?>
 
     <div class="row">
-        <div class="col-xl-12">
+        <div class="col-12">
             <div class="card">
                 <div class="card-body">
 
-                    <h4 class="card-title mb-4"><i class="fas fa-user me-2"></i>Jana Keseluruhan Akademik</h4>
+                    <div class="row mb-3">
+                        <form id="user-form" class="needs-validation" novalidate action="<?php echo e(route('grade.academics.store')); ?>"
+                              method="post">
+                            <?php echo csrf_field(); ?>
 
-                    <form id="user-form" class="needs-validation" novalidate action="<?php echo e(route('grade.academics.store')); ?>"
-                          method="post">
-                        <?php echo csrf_field(); ?>
+                            <div class="row">
 
-                        <div class="row">
-                            <div class="col-md-4">
-                                <div class="mb-3">
-                                    <label for="negeri" class="form-label">NEGERI <span class="input-required">*</span></label>
-                                    <select name="negeri" class="form-select">
-                                        <option selected disabled value="">Sila Pilih</option>
-                                        <option value="1">Johor</option>
-                                        <option value="2">Kedah</option>
-                                        <option value="3">Kelantan</option>
-                                        <option value="4">Melaka</option>
-                                        <option value="5">Negeri Sembilan</option>
-                                        <option value="6">Pahang</option>
-                                        <option value="7">Perak</option>
-                                        <option value="8">Perlis</option>
-                                        <option value="9">Pulau Pinang</option>
-                                        <option value="10">Sabah</option>
-                                        <option value="11">Sarawak</option>
-                                        <option value="12">Selangor</option>
-                                        <option value="13">Terengganu</option>
-                                        <option value="14">WP Kuala Lumpur</option>
-                                        <option value="15">WP Labuan</option>
-                                    </select>
+                                <div class="col-xl-3 col-sm-3">
+                                    <div class="mb-3">
+                                        <label class="form-label">NEGERI</label>
+                                        <select id="state" name="state" class="form-select" required>
+                                            <option selected value="all">SEMUA</option>
+                                            <?php $__currentLoopData = $states; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $state): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                                <option value="<?php echo e($state->id); ?>">
+                                                    <?php echo e($state->parameter); ?>
+
+                                                </option>
+                                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                                        </select>
+                                    </div>
                                 </div>
-                            </div>
 
-                            <div class="col-md-4">
-                                <div class="mb-3">
-                                    <label for="statusUser" class="form-label">JENIS KOLEJ <span
-                                            class="input-required">*</span></label>
-                                    <select name="status" class="form-select">
-                                        <option disabled value="">Sila Pilih</option>
-                                        <option value="1">ILKA</option>
-                                        <option value="2">ILKS</option>
-                                        <option selected value="3">KPM</option>
-                                    </select>
+                                <div class="col-xl-2 col-sm-2">
+                                    <div class="mb-3">
+                                        <label class="form-label">JENIS</label>
+                                        <select id="type" name="type" class="form-select" required>
+                                            <option selected value="all">SEMUA</option>
+                                            <?php $__currentLoopData = $collegeTypes; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $type): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                                <option <?php echo e($type->id == 1 ? 'selected' : ''); ?> value="<?php echo e($type->id); ?>">
+                                                    <?php echo e($type->parameter); ?>
+
+                                                </option>
+                                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                                        </select>
+                                    </div>
                                 </div>
-                            </div>
 
-                            <div class="col-md-4">
-                                <div class="mb-5">
-                                    <label for="statusUser" class="form-label">NAMA KOLEJ <span
-                                            class="input-required">*</span></label>
-                                    <select name="status" class="form-select">
-                                        <option selected disabled value="">Sila Pilih</option>
-                                        <option value="1">Kolej Vokasional (ERT) Azizah</option>
-                                        <option value="2">Kolej Vokasional Batu Pahat</option>
-                                    </select>
+                                <div class="col-xl-4 col-sm-4">
+                                    <div class="mb-3">
+                                        <label class="form-label">KOLEJ VOKASIONAL</label>
+                                        <select id="college" name="college" class="form-select" required>
+                                            <option selected value="all">SEMUA</option>
+                                            <?php $__currentLoopData = $colleges; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $college): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                                <option value="<?php echo e($college->id); ?>">
+                                                    <?php echo e($college->code); ?> - <?php echo e($college->name); ?>
+
+                                                </option>
+                                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                                        </select>
+                                    </div>
                                 </div>
+
                             </div>
-                        </div>
 
+                            <div class="row">
 
-                        <div class="row">
-                            <div class="col-md-3">
-                                <div class="mb-3">
-                                    <label for="statusUser" class="form-label">KOHORT <span
-                                            class="input-required">*</span></label>
-                                    <select name="status" class="form-select">
-                                        <option disabled value="">Sila Pilih</option>
-                                        <option selected value="1">2012</option>
-                                        <option value="2">2013</option>
-                                        <option value="2">2014</option>
-                                        <option value="2">2015</option>
-                                        <option value="2">2016</option>
-                                        <option value="2">2016</option>
-                                        <option value="2">2017</option>
-                                        <option value="2">2018</option>
-                                        <option value="2">2019</option>
-                                        <option value="2">2020</option>
-                                        <option value="2">2021</option>
-                                        <option value="2">2022</option>
-                                    </select>
+                                <div class="col-xl-2 col-sm-2">
+                                    <div class="mb-3">
+                                        <label class="form-label">KOHORT</label>
+                                        <select id="year" name="year" class="form-select" required>
+                                            <option selected disabled value="0">-PILIH-</option>
+                                            <?php $__currentLoopData = $years; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $year): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                                <option
+                                                    <?php echo e($year->parameter == now()->year ? 'selected' : ''); ?> value="<?php echo e($year->parameter); ?>">
+                                                    <?php echo e($year->parameter); ?>
+
+                                                </option>
+                                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                                        </select>
+                                    </div>
                                 </div>
-                            </div>
 
-                            <div class="col-md-3">
-                                <div class="mb-3">
-                                    <label for="statusUser" class="form-label">SEMESTER <span
-                                            class="input-required">*</span></label>
-                                    <select name="status" class="form-select">
-                                        <option selected disabled value="">Sila Pilih</option>
-                                        <option value="1">1</option>
-                                        <option value="2">2</option>
-                                        <option value="3">3</option>
-                                        <option value="4">4</option>
-                                    </select>
+                                <div class="col-xl-2 col-sm-2">
+                                    <div class="mb-3">
+                                        <label class="form-label">SEMESTER</label>
+                                        <select id="semester" name="semester" class="form-select" required>
+                                            
+                                            <?php $__currentLoopData = $semesters; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $semester): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                                <option value="<?php echo e($semester->id); ?>">
+                                                    <?php echo e($semester->parameter); ?>
+
+                                                </option>
+                                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                                        </select>
+                                    </div>
                                 </div>
-                            </div>
 
-                            <div class="col-md-3">
-                                <div class="mb-3">
-                                    <label for="statusUser" class="form-label">SESI PENGAMBILAN <span
-                                            class="input-required">*</span></label>
-                                    <select name="status" class="form-select">
-                                        <option disabled value="">Sila Pilih</option>
-                                        <option selected  value="1">1</option>
-                                        <option value="2">2</option>
-                                    </select>
+                                <div class="col-xl-2 col-sm-2">
+                                    <div class="mb-3">
+                                        <label class="form-label">SESI</label>
+                                        <select id="session" name="session" class="form-select" required>
+                                            <option selected disabled value="0">-PILIH-</option>
+                                            <?php $__currentLoopData = $sessions; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $session): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                                <option
+                                                    <?php echo e($session->id == 1 ? 'selected' : ''); ?> value="<?php echo e($session->id); ?>">
+                                                    <?php echo e($session->parameter); ?>
+
+                                                </option>
+                                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                                        </select>
+                                    </div>
                                 </div>
-                            </div>
 
-                            <div class="col-md-3">
-                                <div class="mb-3">
-                                    <label for="statusUser" class="form-label">KOD PROGRAM <span
-                                            class="input-required">*</span></label>
-                                    <select name="status" class="form-select">
-                                        <option disabled value="">Sila Pilih</option>
-                                        <option selected value="1">SEMUA</option>
-                                    </select>
+                                <div class="col-xl-3 col-sm-3">
+                                    <div class="mb-3">
+                                        <label class="form-label">KURSUS</label>
+                                        <select id="course" name="course" class="form-select" required>
+                                            <option selected value="all">SEMUA</option>
+                                            <?php $__currentLoopData = $courses; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $course): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                                <option value="<?php echo e($course->id); ?>">
+                                                    <?php echo e($course->code); ?> - <?php echo e($course->name); ?>
+
+                                                </option>
+                                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                                        </select>
+                                    </div>
                                 </div>
+
+                                <div class="col-xl col-sm align-self-end">
+                                    <div class="text-sm-end">
+                                        <div class="mb-3">
+                                            <button type="submit" class="btn btn-success waves-effect waves-light w-md btn-store">
+                                                <i class="fas fa-file-signature"></i> Jana Gred
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+
                             </div>
+                        </form>
 
-                        </div>
+                    </div>
+
+                    <hr class="mt-2">
 
 
-                        <hr class="my-4">
 
-                        <div class="row">
-                            <div class="text-end">
-                                <a href="<?php echo e(route('root')); ?>">
-                                    <button type="button" class="btn btn-secondary waves-effect waves-light w-md me-2">
-                                        Kembali
-                                    </button>
-                                </a>
-                                <button type="submit" class="btn btn-success waves-effect waves-light w-md btn-store">
-                                    Jana Gred
-                                </button>
-                            </div>
-                        </div>
-                    </form>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
                 </div>
-                <!-- end card body -->
             </div>
-            <!-- end card -->
-        </div>
-        <!-- end col -->
-    </div>
-    <!-- end row -->
+        </div> <!-- end col -->
+    </div> <!-- end row -->
 <?php $__env->stopSection(); ?>
 
-
 <?php $__env->startSection('script'); ?>
-    <script type="text/javascript">
 
-        function getDOB() {
-            var mykad = $('#mykad').val();
-            var year = mykad.slice(0, 2);
-            var month = mykad.slice(2, 4);
-            var day = mykad.slice(4, 6);
+    <script>
+        $(document).ready(function () {
+            $('#state').on('change', function () {
 
-            var now = new Date().getFullYear().toString();
-            var decade = now.substr(0, 2);
-            if (now.substr(2, 2) > year) {
-                year = parseInt(decade.concat(year.toString()), 10);
+                let selectedState = $('#state').val();
+                let selectedType = $('#type').val();
+                let selectedCollege = 'all';
+                let selectedYear = $('#year').val();
+                let selectedSession = $('#session').val();
+
+                getColleges(selectedState, selectedType);
+                getCourses(selectedState, selectedType, selectedCollege, selectedYear, selectedSession);
+
+            })
+
+            $('#type').on('change', function () {
+
+                let selectedState = $('#state').val();
+                let selectedType = $('#type').val();
+                let selectedCollege = 'all';
+                let selectedYear = $('#year').val();
+                let selectedSession = $('#session').val();
+
+                getColleges(selectedState, selectedType);
+                getCourses(selectedState, selectedType, selectedCollege, selectedYear, selectedSession);
+
+            })
+
+            $('#college').on('change', function () {
+
+                let selectedState = $('#state').val();
+                let selectedType = $('#type').val();
+                let selectedCollege = $('#college').val();
+                let selectedYear = $('#year').val();
+                let selectedSession = $('#session').val();
+
+                getCourses(selectedState, selectedType, selectedCollege, selectedYear, selectedSession);
+
+            })
+
+            $('#year').on('change', function () {
+
+                let selectedState = $('#state').val();
+                let selectedType = $('#type').val();
+                let selectedCollege = $('#college').val();
+                let selectedYear = $('#year').val();
+                let selectedSession = $('#session').val();
+
+                getCourses(selectedState, selectedType, selectedCollege, selectedYear, selectedSession);
+            })
+
+            $('#session').on('change', function () {
+
+                let selectedState = $('#state').val();
+                let selectedType = $('#type').val();
+                let selectedCollege = $('#college').val();
+                let selectedYear = $('#year').val();
+                let selectedSession = $('#session').val();
+
+                getCourses(selectedState, selectedType, selectedCollege, selectedYear, selectedSession);
+            })
+
+            function getColleges(selectedState, selectedType) {
+
+                $('#college').empty();
+                $.ajax({
+                    type: 'GET',
+                    data: {
+                        'selectedState': selectedState,
+                        'selectedType': selectedType,
+                    },
+                    url: '/search/getColleges',
+                    success: function (response) {
+                        if (!Object.keys(response.data).length > 0) {
+                            $('#college').append(
+                                `<option disabled selected value="0">TIADA DATA</option>`
+                            );
+                        } else {
+                            $('#college').append(
+                                `<option selected value="all">SEMUA</option>`
+                            );
+                            $.each(response.data, function (i) {
+                                $('#college').append(
+                                    `<option value="${response.data[i].id}">${response.data[i].code} - ${response.data[i].name}</option>`
+                                );
+                            })
+                        }
+                    }
+                })
+
             }
-            var birthdate = new Date(year, (month - 1), day);
 
-            $('#dob').val(birthdate.getFullYear() + '-' + month + '-' + day).change();
+            function getCourses(selectedState, selectedType, selectedCollege, selectedYear, selectedSession) {
 
-        }
+                $('#course').empty();
+                $.ajax({
+                    type: 'GET',
+                    data: {
+                        'selectedState': selectedState,
+                        'selectedType': selectedType,
+                        'selectedCollege': selectedCollege,
+                        'selectedYear': selectedYear,
+                        'selectedSession': selectedSession,
+                    },
+                    url: '/search/getCourses',
+                    success: function (response) {
+                        if (!Object.keys(response.data).length > 0) {
+                            $('#course').append(
+                                `<option disabled selected value="0">TIADA DATA</option>`
+                            );
+                        } else {
+                            $('#course').append(
+                                `<option selected value="all">SEMUA</option>`
+                            );
+                            $.each(response.data, function (i) {
+                                $('#course').append(
+                                    `<option value="${response.data[i].id}">${response.data[i].code} - ${response.data[i].name}</option>`
+                                );
+                            })
+                        }
+                    }
+                })
+
+            }
+        })
     </script>
+
+
 
     <!-- Sweet Alerts js -->
     <script src="<?php echo e(URL::asset('/assets/libs/sweetalert2/sweetalert2.min.js')); ?>"></script>
@@ -218,16 +351,18 @@
     <!-- Sweet alert init js-->
     <script src="<?php echo e(URL::asset('/assets/js/pages/sweet-alerts.init.js')); ?>"></script>
 
-    <script src="<?php echo e(URL::asset('/assets/libs/parsleyjs/parsleyjs.min.js')); ?>"></script>
-    <script src="<?php echo e(URL::asset('/assets/libs/bootstrap-datepicker/bootstrap-datepicker.min.js')); ?>"></script>
-    <script src="<?php echo e(URL::asset('/assets/libs/datepicker/datepicker.min.js')); ?>"></script>
-    <script src="<?php echo e(URL::asset('/assets/libs/select2/select2.min.js')); ?>"></script>
+    <!-- Required datatable js -->
+    <script src="<?php echo e(URL::asset('/assets/libs/datatables/datatables.min.js')); ?>"></script>
+    <script src="<?php echo e(URL::asset('/assets/libs/jszip/jszip.min.js')); ?>"></script>
+    <script src="<?php echo e(URL::asset('/assets/libs/pdfmake/pdfmake.min.js')); ?>"></script>
 
-    
-    <script src="<?php echo e(URL::asset('/assets/js/pages/form-validation.init.js')); ?>"></script>
+    <!-- Datatable init js -->
+    <script src="<?php echo e(URL::asset('/assets/js/pages/datatables.init.js')); ?>"></script>
 
-    <!-- form advanced init -->
-    <script src="<?php echo e(URL::asset('/assets/js/pages/form-advanced.init.js')); ?>"></script>
+    <script src="<?php echo e(asset('/assets/js/datatables/slip-results.js')); ?>"></script>
+<?php $__env->stopSection(); ?>
+
+<?php $__env->startSection('dt'); ?>
 <?php $__env->stopSection(); ?>
 
 

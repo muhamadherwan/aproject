@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\SearchController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -58,4 +59,9 @@ Route::prefix('administration')->group(function () {
     Route::post('users/ajax', [UserController::class, 'getAjax'])->name('users.ajax');
 });
 
+// Search Controller
+Route::prefix('search')->group(function () {
+    Route::get('getColleges/', [SearchController::class, 'getColleges']);
+    Route::get('getCourses/', [SearchController::class, 'getCourses']);
+});
 

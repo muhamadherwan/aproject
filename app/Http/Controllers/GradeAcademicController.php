@@ -2,7 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\College;
+use App\Models\ConfigCollegesType;
 use App\Models\ConfigGradeAcademic;
+use App\Models\ConfigSemester;
+use App\Models\ConfigSession;
+use App\Models\ConfigState;
+use App\Models\ConfigYear;
+use App\Models\Course;
 use App\Models\Grade;
 use App\Models\MarksAcademic;
 use App\Models\StudentsDetail;
@@ -16,7 +23,15 @@ class GradeAcademicController extends Controller
      */
     public function create()
     {
-        return view('modules.grade.academics.create');
+        return view('modules.grade.academics.create', [
+            'states' => ConfigState::get(["parameter", "id"]),
+            'collegeTypes' => ConfigCollegesType::get(["parameter", "id"]),
+            'colleges' => College::get(["id", "code", "name"]),
+            'years' => ConfigYear::get("parameter"),
+            'semesters' => ConfigSemester::get(["id","parameter"]),
+            'sessions' => ConfigSession::get(["id","parameter"]),
+            'courses' => Course::get(["id","code","name"])
+        ]);
     }
 
     /**
@@ -55,12 +70,11 @@ class GradeAcademicController extends Controller
      */
     public function getStudents(Request $request)
     {
-        dd($request->all());
-        return $students = StudentsDetail::where('colleges_fk', $colleges_fk)
-            ->where('year', $year)
-            ->where('semester', $semester)
-            ->where('session', $session)
-            ->where('courses_fk', $courses_fk)
+        return $students = StudentsDetail::where('colleges_fk', $request->college)
+            ->where('year', $request->year)
+            ->where('semester', $request->semester)
+            ->where('session', $request->session)
+            ->where('courses_fk', $request->course)
             ->get(['id', 'semester', 'year']);
     }
 
@@ -89,6 +103,7 @@ class GradeAcademicController extends Controller
      */
     private function setTmSem($student, $subject):void
     {
+//        print $student;exit;
         $student->subject = $subject;
         switch ($student->subject)
         {
@@ -98,6 +113,8 @@ class GradeAcademicController extends Controller
             case 5:
             case 7:
                 $markB1 = MarksAcademic::where('students_details_fk', $student->id)->where('subject_academics_fk', $student->subject)->get('mark_b1');
+//            print $markB1[0]->mark_b1;exit;
+
                 $markA1 = MarksAcademic::where('students_details_fk', $student->id)->where('subject_academics_fk', $student->subject)->get('mark_a1');
 
                 if (($markB1[0]->mark_b1 == -1) || ($markA1[0]->mark_a1 == -1))
