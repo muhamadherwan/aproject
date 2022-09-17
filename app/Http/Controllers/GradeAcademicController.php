@@ -71,6 +71,8 @@ class GradeAcademicController extends Controller
             ->where('session', $request->session)
             ->where('courses_fk', $request->course)
             ->get(['id', 'semester', 'year']);
+
+//        Student::where
     }
 
 
@@ -111,6 +113,7 @@ class GradeAcademicController extends Controller
                     $student->subject
                 )->get('mark_b1');
 //            print $markB1[0]->mark_b1;exit;
+
 
                 $markA1 = MarksAcademic::where('students_details_fk', $student->id)->where(
                     'subject_academics_fk',
@@ -261,7 +264,7 @@ class GradeAcademicController extends Controller
         $grade = ConfigGradeAcademic::where('mark_from', '<=', $total_marks)
             ->where('mark_to', '>=', $total_marks)->get('grade');
 
-        $row = match ($subject->subject_academics_fk) {
+        $row = match($subject->subject_academics_fk) {
             1 => 'grade_bm',
             2 => 'grade_bi',
             3 => 'grade_mt',
