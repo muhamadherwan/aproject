@@ -21,17 +21,17 @@
         @endslot
     @endcomponent
 
-@if ($message = Session::get('success'))
-    <div class="alert alert-success">
-        <p>{{ $message }}</p>
-    </div>
-@endif
+    @if ($message = Session::get('success'))
+        <div class="alert alert-success">
+            <p>{{ $message }}</p>
+        </div>
+    @endif
 
-@if ($message = Session::get('error'))
-    <div class="alert alert-danger">
-        <p>{{ $message }}</p>
-    </div>
-@endif
+    @if ($message = Session::get('error'))
+        <div class="alert alert-danger">
+            <p>{{ $message }}</p>
+        </div>
+    @endif
 
     <div class="row">
         <div class="col-12">
@@ -39,7 +39,8 @@
                 <div class="card-body">
 
                     <div class="row mb-3">
-                        <form id="user-form" class="needs-validation" novalidate action="{{ route('grade.academics.store') }}"
+                        <form id="user-form" class="needs-validation" novalidate
+                              action="{{ route('grade.academics.store') }}"
                               method="post">
                             @csrf
 
@@ -152,7 +153,8 @@
                                 <div class="col-xl col-sm align-self-end">
                                     <div class="text-sm-end">
                                         <div class="mb-3">
-                                            <button type="submit" class="btn btn-success waves-effect waves-light w-md btn-store">
+                                            <button type="submit"
+                                                    class="btn btn-success waves-effect waves-light w-md btn-store">
                                                 <i class="fas fa-file-signature"></i> Jana Gred
                                             </button>
                                         </div>
@@ -166,42 +168,42 @@
 
                     <hr class="mt-2">
 
-{{--                    <div class="row mb-3">--}}
+                    {{--                    <div class="row mb-3">--}}
 
-{{--                        <div class="col-sm">--}}
-{{--                            <div class="text-sm-end">--}}
-{{--                                <a href="#">--}}
-{{--                                    <button type="button" class="btn btn-success waves-effect waves-light w-md me-2">--}}
-{{--                                        <i class="mdi mdi-printer me-1"></i>--}}
-{{--                                        Cetak Slip Keputusan--}}
-{{--                                    </button>--}}
-{{--                                </a>--}}
-{{--                            </div>--}}
-{{--                        </div><!-- end col-->--}}
+                    {{--                        <div class="col-sm">--}}
+                    {{--                            <div class="text-sm-end">--}}
+                    {{--                                <a href="#">--}}
+                    {{--                                    <button type="button" class="btn btn-success waves-effect waves-light w-md me-2">--}}
+                    {{--                                        <i class="mdi mdi-printer me-1"></i>--}}
+                    {{--                                        Cetak Slip Keputusan--}}
+                    {{--                                    </button>--}}
+                    {{--                                </a>--}}
+                    {{--                            </div>--}}
+                    {{--                        </div><!-- end col-->--}}
 
-{{--                    </div>--}}
+                    {{--                    </div>--}}
 
-{{--                    <div class="table-responsive table-hover">--}}
+                    {{--                    <div class="table-responsive table-hover">--}}
 
-{{--                        <table id="slip-results-dt" class="table w-100">--}}
-{{--                            <thead class="table-light">--}}
-{{--                            <tr>--}}
-{{--                                <th class="text-center">#</th>--}}
-{{--                                <th class="text-center">NEGERI</th>--}}
-{{--                                <th class="text-center">KOLEJ VOKASIONAL</th>--}}
-{{--                                <th class="text-center">KOHORT</th>--}}
-{{--                                <th class="text-center">SEMESTER</th>--}}
-{{--                                <th class="text-center">SESI</th>--}}
-{{--                                <th class="text-center">PELAJAR</th>--}}
-{{--                                --}}{{--                                <th class="text-center">BIDANG</th>--}}
-{{--                                --}}{{--                                <th class="text-center">PROGRAM</th>--}}
-{{--                                --}}{{--                                <th class="text-center">KURSUS</th>--}}
-{{--                                --}}{{--                                <th class="text-center">KELAS</th>--}}
-{{--                            </tr>--}}
-{{--                            </thead>--}}
-{{--                            <tbody></tbody>--}}
-{{--                        </table>--}}
-{{--                    </div>--}}
+                    {{--                        <table id="slip-results-dt" class="table w-100">--}}
+                    {{--                            <thead class="table-light">--}}
+                    {{--                            <tr>--}}
+                    {{--                                <th class="text-center">#</th>--}}
+                    {{--                                <th class="text-center">NEGERI</th>--}}
+                    {{--                                <th class="text-center">KOLEJ VOKASIONAL</th>--}}
+                    {{--                                <th class="text-center">KOHORT</th>--}}
+                    {{--                                <th class="text-center">SEMESTER</th>--}}
+                    {{--                                <th class="text-center">SESI</th>--}}
+                    {{--                                <th class="text-center">PELAJAR</th>--}}
+                    {{--                                --}}{{--                                <th class="text-center">BIDANG</th>--}}
+                    {{--                                --}}{{--                                <th class="text-center">PROGRAM</th>--}}
+                    {{--                                --}}{{--                                <th class="text-center">KURSUS</th>--}}
+                    {{--                                --}}{{--                                <th class="text-center">KELAS</th>--}}
+                    {{--                            </tr>--}}
+                    {{--                            </thead>--}}
+                    {{--                            <tbody></tbody>--}}
+                    {{--                        </table>--}}
+                    {{--                    </div>--}}
 
                 </div>
             </div>

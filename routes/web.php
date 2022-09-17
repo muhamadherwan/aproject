@@ -28,8 +28,12 @@ Auth::routes();
 Route::get('/', [App\Http\Controllers\HomeController::class, 'root'])->name('root');
 
 //Update User Details
-Route::post('/update-profile/{id}', [App\Http\Controllers\HomeController::class, 'updateProfile'])->name('updateProfile');
-Route::post('/update-password/{id}', [App\Http\Controllers\HomeController::class, 'updatePassword'])->name('updatePassword');
+Route::post('/update-profile/{id}', [App\Http\Controllers\HomeController::class, 'updateProfile'])->name(
+    'updateProfile'
+);
+Route::post('/update-password/{id}', [App\Http\Controllers\HomeController::class, 'updatePassword'])->name(
+    'updatePassword'
+);
 
 Route::get('{any}', [App\Http\Controllers\HomeController::class, 'index'])->name('index');
 
@@ -45,7 +49,7 @@ Route::prefix('marks-academic')->group(function () {
 // Penjanaan Gred
 Route::prefix('grade')->group(function () {
     Route::get('academics', [GradeAcademicController::class, 'create'])->name('grade.academics.create');
-    Route::post('academics/generate',[GradeAcademicController::class, 'store'])->name('grade.academics.store');
+    Route::post('academics/generate', [GradeAcademicController::class, 'store'])->name('grade.academics.store');
 
     Route::resource('vocationals', GradeVocationalController::class);
     Route::get('getColleges/', [GradeVocationalController::class, 'getColleges']);
