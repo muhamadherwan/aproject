@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use Exception;
+use App\Actions\GetStudentsAction;
 use App\Models\College;
 use App\Models\ConfigCollegesType;
 use App\Models\ConfigGradeAcademic;
@@ -18,9 +20,7 @@ use Illuminate\Http\Request;
 
 class GradeAcademicController extends Controller
 {
-    /**
-     * Show the form for creating a new resource.
-     */
+
     public function create()
     {
         return view('modules.grade.academics.create', [
@@ -34,45 +34,16 @@ class GradeAcademicController extends Controller
         ]);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     * @param \Illuminate\Http\Request $request
-     * @return
-     */
-    public function store(Request $request): \Illuminate\Http\RedirectResponse
+    public function store(Request $request, GetStudentsAction $action)
     {
-        $students = $this->getStudents($request);
-//        print count($students);exit;
-
-        if (count($students) > 0) {
-//            foreach ($students as $student)
-//            {
-//                $studentsDetailsFk = $student->id;
-//                $totalMark = $this->setTotalMarks($student);
-//                $gradeRow = Grade::where('students_details_fk', $studentsDetailsFk)->count();
-//                if ($gradeRow == 0) { Grade::create(['students_details_fk' => $studentsDetailsFk]); }
-//                $graded = $this->setGrade($studentsDetailsFk);
-//            }
-            return back()->with('success', 'Gred akademik berjaya dijana.');
+        try {
+            $students = $action->handle($request);
+        } catch (Exception $e) {
+            return back()->withError($e->getMessage());
         }
-        return back()->with('error', 'Gred akademik gagal dijana.');
-    }
 
-    /**
-     * Get students based on request.
-     * @param $student
-     * @return
-     */
-    public function getStudents(Request $request)
-    {
-        return $students = StudentsDetail::where('colleges_fk', $request->college)
-            ->where('year', $request->year)
-            ->where('semester', $request->semester)
-            ->where('session', $request->session)
-            ->where('courses_fk', $request->course)
-            ->get(['id', 'semester', 'year']);
+        return back()->with('success', 'Gred akademik berjaya dijana.');
     }
-
 
     /**
      * Set student subjects total mark based on subject.

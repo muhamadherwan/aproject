@@ -33,6 +33,12 @@
         </div>
     @endif
 
+{{--    @if (session('error'))--}}
+{{--        <div class="alert alert-danger">--}}
+{{--            <p>{{ $message }}</p>--}}
+{{--        </div>--}}
+{{--    @endif--}}
+
     <div class="row">
         <div class="col-12">
             <div class="card">
