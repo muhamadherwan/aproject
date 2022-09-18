@@ -20,8 +20,9 @@ class DatabaseSeeder extends Seeder
             ConfigReligionSeeder::class,
             UserSeeder::class,
             RolePermissionSeeder::class,
-            SubjectAcademicSeeder::class,
+//            SubjectAcademicSeeder::class,
         ]);
+        $this->call(SubjectAcademicsTableSeeder::class);
         $this->call(ConfigCollegesTypesTableSeeder::class);
         $this->call(ConfigRacesTableSeeder::class);
         $this->call(CollegesTableSeeder::class);
@@ -40,6 +41,7 @@ class DatabaseSeeder extends Seeder
         $this->call(ClassroomsTableSeeder::class);
         $this->call(StudentsTableSeeder::class);
         $this->call(StudentsDetailsTableSeeder::class);
+        $this->call(SubjectAcademicsDetailsTableSeeder::class);
         $this->call(MarksAcademicsTableSeeder::class);
     }
 }

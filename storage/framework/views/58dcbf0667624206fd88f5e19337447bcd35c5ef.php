@@ -19,17 +19,17 @@
         <?php $__env->endSlot(); ?>
     <?php echo $__env->renderComponent(); ?>
 
-<?php if($message = Session::get('success')): ?>
-    <div class="alert alert-success">
-        <p><?php echo e($message); ?></p>
-    </div>
-<?php endif; ?>
+    <?php if($message = Session::get('success')): ?>
+        <div class="alert alert-success">
+            <p><?php echo e($message); ?></p>
+        </div>
+    <?php endif; ?>
 
-<?php if($message = Session::get('error')): ?>
-    <div class="alert alert-danger">
-        <p><?php echo e($message); ?></p>
-    </div>
-<?php endif; ?>
+    <?php if($message = Session::get('error')): ?>
+        <div class="alert alert-danger">
+            <p><?php echo e($message); ?></p>
+        </div>
+    <?php endif; ?>
 
     <div class="row">
         <div class="col-12">
@@ -37,7 +37,8 @@
                 <div class="card-body">
 
                     <div class="row mb-3">
-                        <form id="user-form" class="needs-validation" novalidate action="<?php echo e(route('grade.academics.store')); ?>"
+                        <form id="user-form" class="needs-validation" novalidate
+                              action="<?php echo e(route('grade.academics.store')); ?>"
                               method="post">
                             <?php echo csrf_field(); ?>
 
@@ -157,7 +158,8 @@
                                 <div class="col-xl col-sm align-self-end">
                                     <div class="text-sm-end">
                                         <div class="mb-3">
-                                            <button type="submit" class="btn btn-success waves-effect waves-light w-md btn-store">
+                                            <button type="submit"
+                                                    class="btn btn-success waves-effect waves-light w-md btn-store">
                                                 <i class="fas fa-file-signature"></i> Jana Gred
                                             </button>
                                         </div>
@@ -171,42 +173,42 @@
 
                     <hr class="mt-2">
 
+                    
 
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
 
+                    
 
+                    
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
 
                 </div>
             </div>
