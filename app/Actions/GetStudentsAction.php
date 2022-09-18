@@ -4,14 +4,13 @@ namespace App\Actions;
 
 use App\Models\StudentsDetail;
 use Illuminate\Http\Request;
-use Illuminate\Support\Collection;
 
 class GetStudentsAction
 {
     /**
      * @throws \Exception
      */
-    public function handle(Request $request): Collection
+    public function handle(Request $request): object
     {
         $query = StudentsDetail::query();
 
