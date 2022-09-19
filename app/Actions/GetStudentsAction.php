@@ -26,12 +26,12 @@ class GetStudentsAction
             $query->where('courses_fk', $request->course);
         }
 
-        $students = $query->get(['id', 'semester', 'year']);
+        $collection = $query->get(['id', 'semester', 'year']);
 
-        if ($students->count() == 0) {
+        if ($collection->isEmpty()) {
             throw new \Exception('Tiada rekod pelajar ditemui di dalam pangkalan data.');
         }
 
-        return $students;
+        return $collection;
     }
 }

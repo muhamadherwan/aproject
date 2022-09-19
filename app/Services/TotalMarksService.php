@@ -10,105 +10,216 @@ class TotalMarksService
     /**
      * @throws \Exception
      */
-    public function handle($students)
+    public function handle(object $students): bool
     {
-        foreach ($students as $student)
-        {
-            $bm = ($student->semester != 4) ? $this->store($student, 1) : $this->storeBMSetara($student);
+        foreach ($students as $student) {
+            $bm = ($student->semester != 4) ? $this->create($student, 1) : $this->createBMSetara($student);
+            $bi = $this->create($student, 2);
+            $mt = $this->create($student, 3);
+            $sn = $this->create($student, 4);
+            $sj = ($student->semester != 4) ? $this->create($student, 5) : $this->createSJSetara($student);
+
+            $collection = MarksAcademic::where('students_details_fk', $student->id)->where(
+                'subject_academics_fk',
+                '6'
+            )->get('id');
+
+            $agama = $collection->isEmpty() ? $this->create($student, 7) : $this->create($student, 6);
         }
 
         return true;
     }
 
     /**
-     * @param object $student
-     * @param int $subject
      * @throws \Exception
      */
-    private function store(object $student, int $subject)
+    private function create(object $student, int $subject): bool
     {
         $student->subject = $subject;
-        switch ($student->subject) {
-            case 1:
-            case 2:
-            case 3:
-            case 5:
-            case 7:
-                $markB1 = MarksAcademic::where('students_details_fk', $student->id)->where(
-                    'subject_academics_fk',
-                    $student->subject
-                )->get('mark_b1');
-                if ($markB1->count() == 0) {
-                    throw new \Exception('Gred akademik tidak berjaya dijana. Tiada rekod markah berterusan 1.');
-                }
-//            print $markB1[0]->mark_b1;exit;
 
-                $markA1 = MarksAcademic::where('students_details_fk', $student->id)->where(
-                    'subject_academics_fk',
-                    $student->subject
-                )->get('mark_a1');
-                if ($markB1->count() == 0) {
-                    throw new \Exception('Gred akademik tidak berjaya dijana. Tiada rekod markah akhir 1.');
-                }
-//            print $markA1[0]->mark_a1;exit;
+        match ($student->subject) {
+            1, 2, 3, 5, 7 => $this->store1($student),
+            4, 6 => $this->store2($student),
+        };
 
-//                $markB1[0]->mark_b1 = -1;
-                if (($markB1[0]->mark_b1 == -1) || ($markA1[0]->mark_a1 == -1)) {
-                    $value = $this->setTotalMarksNegative($student);
-                } else {
-                    $wajaran_berterusan = $this->getWajaranBerterusan($student);
-                    if ($markB1->count() == 0) {
-                        throw new \Exception('Gred akademik tidak berjaya dijana. Tiada rekod wajaran berterusan.');
-                    }
-
-                    $wajaran_akhir = $this->getWajaranAkhir($student, 1);
-                    if ($markB1->count() == 0) {
-                        throw new \Exception('Gred akademik tidak berjaya dijana. Tiada rekod wajaran akhir.');
-                    }
-
-                    $twb = ceil(($markB1[0]->mark_b1 / 100) * $wajaran_berterusan[0]->continuous);
-                    $twa = ceil(($markA1[0]->mark_a1 / 100) * $wajaran_akhir[0]->final1);
-                    $totalMarks = $twb + $twa;
-
-                    $value = MarksAcademic::where('students_details_fk', $student->id)->where(
-                        'subject_academics_fk',
-                        $student->subject
-                    )->update(['total_marks' => $totalMarks]);
-                }
-        }
-        return $value;
+        return true;
     }
 
-    private function storeBMSetara(object $student): bool
+    /**
+     * @throws \Exception
+     */
+    private function store1(object $student): bool
+    {
+        $markB1 = $this->getMarkB1($student);
+        $markA1 = $this->getMarkA1($student);
+
+        if (($markB1[0]->mark_b1 != -1) || ($markA1[0]->mark_a1 != -1)) {
+            $wajaran_berterusan = $this->getWajaranBerterusan($student);
+            $wajaran_akhir = $this->getWajaranAkhir($student, 1);
+
+            $twb = ceil(($markB1[0]->mark_b1 / 100) * $wajaran_berterusan[0]->continuous);
+            $twa = ceil(($markA1[0]->mark_a1 / 100) * $wajaran_akhir[0]->final1);
+            $totalMarks = $twb + $twa;
+
+            MarksAcademic::where('students_details_fk', $student->id)->where(
+                'subject_academics_fk',
+                $student->subject
+            )->update(['total_marks' => $totalMarks]);
+        }
+
+        if (($markB1[0]->mark_b1 == -1) || ($markA1[0]->mark_a1 == -1)) {
+            $this->setTotalMarksNegative($student);
+        }
+
+        return true;
+    }
+
+    /**
+     * @throws \Exception
+     */
+    private function store2(object $student): bool
+    {
+        $markB1 = $this->getMarkB1($student);
+        $markA1 = $this->getMarkA1($student);
+        $markA2 = $this->getMarkA2($student);
+        $markA2 = ($student->subject == 4) ? $markA2[0]->mark_a2 ?? 0 : $markA2[0]->mark_a2;
+
+        if (($markB1[0]->mark_b1 != -1) || ($markA1[0]->mark_a1 != -1) || ($markA2 != -1)) {
+            $wajaran_berterusan = $this->getWajaranBerterusan($student);
+            $wajaran_akhir = $this->getWajaranAkhir($student, 1);
+            $wajaran_akhir2 = $this->getWajaranAkhir($student, 2);
+
+            $twb = ceil(($markB1[0]->mark_b1 / 100) * $wajaran_berterusan[0]->continuous);
+            $twa = ceil(($markA1[0]->mark_a1 / 100) * $wajaran_akhir[0]->final1);
+            $twa2 = ceil(($markA2 / 100) * $wajaran_akhir2[0]->final2);
+            $totalMarks = $twb + $twa + $twa2;
+
+            MarksAcademic::where('students_details_fk', $student->id)->where(
+                'subject_academics_fk',
+                $student->subject
+            )->update(['total_marks' => $totalMarks]);
+        }
+
+        if (($markB1[0]->mark_b1 == -1) || ($markA1[0]->mark_a1 == -1) || ($markA2 == -1)) {
+            $this->setTotalMarksNegative($student);
+        }
+
+        return true;
+    }
+
+    private function createBMSetara(object $student): bool
     {
         // some code....
         return true;
     }
 
-    private function setTotalMarksNegative(object $student) :bool
+    private function createSJSetara(object $student): bool
     {
-        return MarksAcademic::where('students_details_fk', $student->id)
-            ->where('subject_academics_fk', $student->subject)
-            ->update(['total_marks' => -1]);
+        // some code....
+        return true;
     }
 
-    private function getWajaranBerterusan(object $student) :object
+    /**
+     * @throws \Exception
+     */
+    private function getMarkB1(object $student): object
     {
-        return SubjectAcademicsDetail::where('year', $student->year)
+        $collection = MarksAcademic::where('students_details_fk', $student->id)->where(
+            'subject_academics_fk',
+            $student->subject
+        )->get('mark_b1');
+
+        if ($collection->isEmpty()) {
+            throw new \Exception('Gred akademik tidak berjaya dijana. Tiada rekod markah berterusan 1.');
+        }
+
+        return $collection;
+    }
+
+    /**
+     * @throws \Exception
+     */
+    private function getMarkA1(object $student): object
+    {
+        $collection = MarksAcademic::where('students_details_fk', $student->id)->where(
+            'subject_academics_fk',
+            $student->subject
+        )->get('mark_a1');
+
+        if ($collection->isEmpty()) {
+            throw new \Exception('Gred akademik tidak berjaya dijana. Tiada rekod markah akhir 1.');
+        }
+
+        return $collection;
+    }
+
+    /**
+     * @throws \Exception
+     */
+    private function getMarkA2(object $student): object
+    {
+        $collection = MarksAcademic::where('students_details_fk', $student->id)->where(
+            'subject_academics_fk',
+            $student->subject
+        )->get('mark_a2');
+
+        if ($collection->isEmpty()) {
+            throw new \Exception('Gred akademik tidak berjaya dijana. Tiada rekod markah akhir 2.');
+        }
+
+        return $collection;
+    }
+
+
+    /**
+     * @throws \Exception
+     */
+    private function setTotalMarksNegative(object $student): bool
+    {
+        $collection = MarksAcademic::where('students_details_fk', $student->id)
+            ->where('subject_academics_fk', $student->subject)
+            ->update(['total_marks' => -1]);
+
+        if ($collection != true) {
+            throw new \Exception('Gred akademik tidak berjaya dijana. Tiada rekod markah -1');
+        }
+
+        return true;
+    }
+
+    /**
+     * @throws \Exception
+     */
+    private function getWajaranBerterusan(object $student): object
+    {
+        $collection = SubjectAcademicsDetail::where('year', $student->year)
             ->where('semester', $student->semester)
             ->where('subject_academics_fk', $student->subject)
             ->get('continuous');
+
+        if ($collection->isEmpty()) {
+            throw new \Exception('Gred akademik tidak berjaya dijana. Tiada rekod wajaran berterusan.');
+        }
+
+        return $collection;
     }
 
-    private function getWajaranAkhir(object $student, int $type) :object
+    /**
+     * @throws \Exception
+     */
+    private function getWajaranAkhir(object $student, int $type): object
     {
         $final = ($type == 1) ? 'final1' : 'final2';
 
-        return SubjectAcademicsDetail::where('year', $student->year)
+        $collection = SubjectAcademicsDetail::where('year', $student->year)
             ->where('semester', $student->semester)
             ->where('subject_academics_fk', $student->subject)
             ->get($final);
+
+        if ($collection->isEmpty()) {
+            throw new \Exception('Gred akademik tidak berjaya dijana. Tiada rekod wajaran akhir.');
+        }
+
+        return $collection;
     }
-
-
 }

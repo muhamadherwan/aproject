@@ -8,7 +8,7 @@ use App\Models\MarksAcademic;
 
 class SetGradeAction
 {
-    public function handle(object $students)
+    public function handle(object $students):bool
     {
         foreach ($students as $student) {
             $subjects = MarksAcademic::where('students_details_fk', $student->id)
@@ -43,6 +43,6 @@ class SetGradeAction
                     ->update(['is_graded' => 1]);
             }
         }
-//        return true;
+        return true;
     }
 }

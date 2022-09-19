@@ -17,7 +17,6 @@ use Illuminate\Http\Request;
 
 class GradeAcademicController extends Controller
 {
-
     public function create()
     {
         return view('modules.grade.academics.create', [
@@ -39,13 +38,12 @@ class GradeAcademicController extends Controller
     ) {
         try {
             $students = $studentsAction->handle($request);
-            $totalMarks = $totalMarksService->handle($students);
-            $grade = $gradeAction->handle($students);
+            $totalMarksService->handle($students);
+            $gradeAction->handle($students);
         } catch (Exception $e) {
             return back()->withError($e->getMessage());
         }
 
         return back()->with('success', 'Gred akademik berjaya dijana.');
     }
-
 }
