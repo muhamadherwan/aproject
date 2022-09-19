@@ -15,6 +15,18 @@ use App\Models\ConfigYear;
 use App\Models\Course;
 use Illuminate\Http\Request;
 
+/*
+|--------------------------------------------------------------------------
+| Set Academics Grade Controller v1.1.0
+|--------------------------------------------------------------------------
+|
+| Controller for create students subject total mark and grade
+| based on request values from submit form.
+| Author:mdherwan@gmail.com
+| Date: 13 Sept 2022.
+|
+*/
+
 class GradeAcademicController extends Controller
 {
     public function create()

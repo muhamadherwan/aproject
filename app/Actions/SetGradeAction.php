@@ -6,6 +6,18 @@ use App\Models\ConfigGradeAcademic;
 use App\Models\Grade;
 use App\Models\MarksAcademic;
 
+/*
+|--------------------------------------------------------------------------
+| Set Students Detail v1.1.0
+|--------------------------------------------------------------------------
+|
+| Action class for set students academic subject
+| grade based on total mark.
+| Author:mdherwan@gmail.com
+| Date: 13 Sept 2022.
+|
+*/
+
 class SetGradeAction
 {
     public function handle(object $students):bool

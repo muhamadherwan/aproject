@@ -5,6 +5,17 @@ namespace App\Actions;
 use App\Models\StudentsDetail;
 use Illuminate\Http\Request;
 
+/*
+|--------------------------------------------------------------------------
+| Get Students Detail v1.1.0
+|--------------------------------------------------------------------------
+|
+| Action class for get students detail from db based on form request.
+| Author:mdherwan@gmail.com
+| Date: 13 Sept 2022.
+|
+*/
+
 class GetStudentsAction
 {
     /**

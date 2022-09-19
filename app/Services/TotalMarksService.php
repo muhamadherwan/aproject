@@ -5,6 +5,17 @@ namespace App\Services;
 use App\Models\MarksAcademic;
 use App\Models\SubjectAcademicsDetail;
 
+/*
+|--------------------------------------------------------------------------
+| Set Academics Subject Total Mark v1.1.0
+|--------------------------------------------------------------------------
+|
+| Service class for set students academic subject total mark.
+| Author:mdherwan@gmail.com
+| Date: 13 Sept 2022.
+|
+*/
+
 class TotalMarksService
 {
     /**
