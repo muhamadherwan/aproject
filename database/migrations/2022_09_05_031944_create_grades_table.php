@@ -19,7 +19,7 @@ return new class extends Migration {
             $table->string('grade_bm');
             $table->string('grade_bi');
             $table->string('grade_sj');
-            $table->string('grade_sc');
+            $table->string('grade_sn');
             $table->string('grade_mt');
             $table->string('grade_pi');
             $table->string('grade_pm');

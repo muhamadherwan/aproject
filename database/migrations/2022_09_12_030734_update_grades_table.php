@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('grade_bm')->nullable()->change();
             $table->string('grade_bi')->nullable()->change();
             $table->string('grade_sj')->nullable()->change();
-            $table->string('grade_sc')->nullable()->change();
+            $table->string('grade_sn')->nullable()->change();
             $table->string('grade_mt')->nullable()->change();
             $table->string('grade_pi')->nullable()->change();
             $table->string('grade_pm')->nullable()->change();
@@ -60,7 +60,7 @@ return new class extends Migration
             $table->string('grade_bm')->nullable(false)->change();
             $table->string('grade_bi')->nullable(false)->change();
             $table->string('grade_sj')->nullable(false)->change();
-            $table->string('grade_sc')->nullable(false)->change();
+            $table->string('grade_sn')->nullable(false)->change();
             $table->string('grade_mt')->nullable(false)->change();
             $table->string('grade_pi')->nullable(false)->change();
             $table->string('grade_pm')->nullable(false)->change();
