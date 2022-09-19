@@ -8,7 +8,7 @@ use App\Models\MarksAcademic;
 
 class SetGradeAction
 {
-    public function handle( object $students)
+    public function handle(object $students)
     {
         foreach ($students as $student) {
             $subjects = MarksAcademic::where('students_details_fk', $student->id)
@@ -17,28 +17,32 @@ class SetGradeAction
                 ->get(['subject_academics_fk', 'total_marks']);
 
             foreach ($subjects as $subject) {
-                $total_marks = $subject->total_marks ?? 0;
+                $totalMarks = $subject->total_marks ?? 0;
 
-                $grade = ConfigGradeAcademic::where('mark_from', '<=', $total_marks)
-                    ->where('mark_to', '>=', $total_marks)->get('grade');
+                $grade = ConfigGradeAcademic::where('mark_from', '<=', $totalMarks)
+                    ->where('mark_to', '>=', $totalMarks)->get('grade');
 
                 $row = match ($subject->subject_academics_fk) {
                     1 => 'grade_bm',
                     2 => 'grade_bi',
                     3 => 'grade_mt',
-                    4 => 'grade_sc',
+                    4 => 'grade_sn',
                     5 => 'grade_sj',
                     6 => 'grade_pi',
                     7 => 'grade_pm',
                 };
 
-                Grade::where('students_details_fk', $student)->update([$row => $grade[0]->grade]);
+                $gradeRow = Grade::where('students_details_fk', $student->id)->count();
 
-                MarksAcademic::where('students_details_fk', $student)
+                if ($gradeRow == 0) { Grade::create(['students_details_fk' => $student->id]); }
+
+                Grade::where('students_details_fk', $student->id)->update([$row => $grade[0]->grade]);
+
+                MarksAcademic::where('students_details_fk', $student->id)
                     ->where('subject_academics_fk', $subject->subject_academics_fk)
                     ->update(['is_graded' => 1]);
             }
         }
-        return true;
+//        return true;
     }
 }

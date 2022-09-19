@@ -39,7 +39,7 @@ class TotalMarksService
                     $student->subject
                 )->get('mark_b1');
                 if ($markB1->count() == 0) {
-                    throw new \Exception('Gred akademik berjaya dijana. Tiada rekod markah berterusan 1.');
+                    throw new \Exception('Gred akademik tidak berjaya dijana. Tiada rekod markah berterusan 1.');
                 }
 //            print $markB1[0]->mark_b1;exit;
 
@@ -48,7 +48,7 @@ class TotalMarksService
                     $student->subject
                 )->get('mark_a1');
                 if ($markB1->count() == 0) {
-                    throw new \Exception('Gred akademik berjaya dijana. Tiada rekod markah akhir 1.');
+                    throw new \Exception('Gred akademik tidak berjaya dijana. Tiada rekod markah akhir 1.');
                 }
 //            print $markA1[0]->mark_a1;exit;
 
@@ -58,12 +58,12 @@ class TotalMarksService
                 } else {
                     $wajaran_berterusan = $this->getWajaranBerterusan($student);
                     if ($markB1->count() == 0) {
-                        throw new \Exception('Gred akademik berjaya dijana. Tiada rekod wajaran berterusan.');
+                        throw new \Exception('Gred akademik tidak berjaya dijana. Tiada rekod wajaran berterusan.');
                     }
 
                     $wajaran_akhir = $this->getWajaranAkhir($student, 1);
                     if ($markB1->count() == 0) {
-                        throw new \Exception('Gred akademik berjaya dijana. Tiada rekod wajaran akhir.');
+                        throw new \Exception('Gred akademik tidak berjaya dijana. Tiada rekod wajaran akhir.');
                     }
 
                     $twb = ceil(($markB1[0]->mark_b1 / 100) * $wajaran_berterusan[0]->continuous);
@@ -79,7 +79,7 @@ class TotalMarksService
         return $value;
     }
 
-    private function storeBMSetara(object $student, int $subject): bool
+    private function storeBMSetara(object $student): bool
     {
         // some code....
         return true;
