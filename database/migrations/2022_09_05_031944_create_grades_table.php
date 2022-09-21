@@ -16,37 +16,46 @@ return new class extends Migration {
             $table->id();
             $table->unsignedBigInteger('students_details_fk');
             $table->foreign('students_details_fk')->references('id')->on('students_details');
-            $table->string('grade_bm');
-            $table->string('grade_bi');
-            $table->string('grade_sj');
-            $table->string('grade_sn');
-            $table->string('grade_mt');
-            $table->string('grade_pi');
-            $table->string('grade_pm');
-            $table->integer('academic_bm_credit_hour');
-            $table->decimal('academic_bm_pointer', 8, 2);
+            $table->string('grade_bm')->nullable();
+            $table->string('grade_bi')->nullable();
+            $table->string('grade_sj')->nullable();
+            $table->string('grade_sn')->nullable();
+            $table->string('grade_mt')->nullable();
+            $table->string('grade_pi')->nullable();
+            $table->string('grade_pm')->nullable();
 
-            $table->integer('academic_credit_hour');
-            $table->decimal('academic_pointer', 8, 2);
-            $table->integer('academic_credit_hour_cum');
-            $table->decimal('academic_pointer_cum', 8, 2);
+            $table->integer('academic_bm_credit_hour')->nullable();
+            $table->decimal('academic_bm_pointer', 8, 2)->nullable();
 
-            $table->integer('vocational_credit_hour');
-            $table->decimal('vocational_pointer', 8, 2);
-            $table->integer('vocational_credit_hour_cum');
-            $table->decimal('vocational_pointer_cum', 8, 2);
+            $table->integer('academic_credit_hour')->nullable();
+            $table->decimal('academic_pointer', 8, 2)->nullable();
+            $table->integer('academic_credit_hour_cum')->nullable();
+            $table->decimal('academic_pointer_cum', 8, 2)->nullable();
 
-            $table->decimal('png_bm', 8, 2);  // semak pengiraan di sistem lama
-            $table->decimal('pngk_bm', 8, 2); // semak pengiraan di sistem lama
+            $table->string('grade_module2')->nullable();
+            $table->string('grade_module3')->nullable();
+            $table->string('grade_module4')->nullable();
+            $table->string('grade_module5')->nullable();
+            $table->string('grade_module6')->nullable();
+            $table->string('grade_module7')->nullable();
+            $table->string('grade_module8')->nullable();
 
-            $table->decimal('png_a', 8, 2);
-            $table->decimal('pngk_a', 8, 2);
+            $table->integer('vocational_credit_hour')->nullable();
+            $table->decimal('vocational_pointer', 8, 2)->nullable();
+            $table->integer('vocational_credit_hour_cum')->nullable();
+            $table->decimal('vocational_pointer_cum', 8, 2)->nullable();
 
-            $table->decimal('png_v', 8, 2);
-            $table->decimal('pngk_v', 8, 2);
+            $table->decimal('png_bm', 8, 2)->nullable();  // semak pengiraan di sistem lama
+            $table->decimal('pngk_bm', 8, 2)->nullable(); // semak pengiraan di sistem lama
 
-            $table->decimal('pngk', 8, 2);
-            $table->decimal('pngkk', 8, 2);
+            $table->decimal('png_a', 8, 2)->nullable();
+            $table->decimal('pngk_a', 8, 2)->nullable();
+
+            $table->decimal('png_v', 8, 2)->nullable();
+            $table->decimal('pngk_v', 8, 2)->nullable();
+
+            $table->decimal('pngk', 8, 2)->nullable();
+            $table->decimal('pngkk', 8, 2)->nullable();
 
             $table->timestamps();
         });
