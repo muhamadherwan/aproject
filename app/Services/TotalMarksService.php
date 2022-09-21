@@ -3,14 +3,17 @@
 namespace App\Services;
 
 use App\Models\MarksAcademic;
+use App\Models\StudentsDetail;
 use App\Models\SubjectAcademicsDetail;
+use stdClass; // will remove this for prod.only use for dev on set wajaran dummy value.
 
 /*
 |--------------------------------------------------------------------------
 | Set Academics Subject Total Mark v1.1.0
 |--------------------------------------------------------------------------
 |
-| Service class for set students academic subject total mark.
+| Set students academic subject total mark based on semester
+| and stored in db.
 | Author:mdherwan@gmail.com
 | Date: 13 Sept 2022.
 |
@@ -24,18 +27,20 @@ class TotalMarksService
     public function handle(object $students): bool
     {
         foreach ($students as $student) {
-            $bm = ($student->semester != 4) ? $this->create($student, 1) : $this->createBMSetara($student);
-            $bi = $this->create($student, 2);
-            $mt = $this->create($student, 3);
-            $sn = $this->create($student, 4);
-            $sj = ($student->semester != 4) ? $this->create($student, 5) : $this->createSJSetara($student);
+//            $bm = ($student->semester != 4) ? $this->create($student, 1) : $this->createBMSetara($student);
+//            $bi = $this->create($student, 2);
+//            $mt = $this->create($student, 3);
+//            $sn = $this->create($student, 4);
+//            $sj = ($student->semester != 4) ? $this->create($student, 5) : $this->createSJSetara($student);
+//
+//            $collection = MarksAcademic::where('students_details_fk', $student->id)->where(
+//                'subject_academics_fk',
+//                '6'
+//            )->get('id');
+//
+//            $agama = $collection->isEmpty() ? $this->create($student, 7) : $this->create($student, 6);
 
-            $collection = MarksAcademic::where('students_details_fk', $student->id)->where(
-                'subject_academics_fk',
-                '6'
-            )->get('id');
-
-            $agama = $collection->isEmpty() ? $this->create($student, 7) : $this->create($student, 6);
+            $bm = $this->createBMSetara($student);
         }
 
         return true;
@@ -120,7 +125,32 @@ class TotalMarksService
 
     private function createBMSetara(object $student): bool
     {
-        // some code....
+        $student->subject = 1;
+
+//        $wajaran_berterusan = $this->getWajaranBerterusan($student);
+//        $wajaran_akhir = $this->getWajaranAkhir($student, 1);
+
+        // set dummy data for testing.
+        // coz still no data in db. will delete for PROD.
+        $wajaran_berterusan[] = new stdClass();
+        $wajaran_berterusan[0]->continuous = 30;
+        $wajaran_akhir[] = new stdClass();
+        $wajaran_akhir[0]->final1 = 30;
+
+        $bmSem1Mark = $this->getTotalMark($student->students_fk, 1);
+        $bmSem2Mark = $this->getTotalMark($student->students_fk, 2);
+        $bmSem3Mark = $this->getTotalMark($student->students_fk, 3);
+        $markB1 = $this->getMarkB1($student);
+
+
+
+//        print $bmSem1Mark[0]['total_marks'].'<br/>';
+//        print $bmSem2Mark[0]['total_marks'].'<br/>';
+//        print $bmSem3Mark[0]['total_marks'].'<br/>';
+//        print $markB1[0]['mark_b1'].'<br/>';
+//        print $wajaran_berterusan[0]->continuous.'<br/>';
+//        print $wajaran_akhir[0]->final1;exit;
+
         return true;
     }
 
@@ -128,6 +158,30 @@ class TotalMarksService
     {
         // some code....
         return true;
+    }
+
+    /**
+     * @throws \Exception
+     */
+    private function getTotalMark(int $studentsFk, int $sem): object
+    {
+        $studentsDetailsFk = StudentsDetail::where('students_fk', $studentsFk)
+            ->where('semester', $sem)
+            ->get('id');
+
+//           print $studentsDetailsFk[0]['id'];exit;
+
+        $collection = MarksAcademic::where('students_details_fk', $studentsDetailsFk[0]['id'])
+            ->where('subject_academics_fk', '1')
+            ->get('total_marks');
+
+//        print $collection;die;
+
+        if ($collection->isEmpty()) {
+            throw new \Exception("Gred akademik tidak berjaya dijana. Tiada rekod markah Bahasa Melayu bagi semester $sem.");
+        }
+
+        return $collection;
     }
 
     /**

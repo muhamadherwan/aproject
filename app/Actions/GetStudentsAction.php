@@ -10,9 +10,9 @@ use Illuminate\Http\Request;
 | Get Students Detail v1.1.0
 |--------------------------------------------------------------------------
 |
-| Action class for get students detail from db based on form request.
-| Author:mdherwan@gmail.com
-| Date: 13 Sept 2022.
+| Get students detail id, semester and year
+| from db based on form request.
+| Author:mdherwan@gmail.com Date: 13 Sept 2022.
 |
 */
 
@@ -37,7 +37,7 @@ class GetStudentsAction
             $query->where('courses_fk', $request->course);
         }
 
-        $collection = $query->get(['id', 'semester', 'year']);
+        $collection = $query->get(['id', 'students_fk', 'semester', 'year']);
 
         if ($collection->isEmpty()) {
             throw new \Exception('Tiada rekod pelajar ditemui di dalam pangkalan data.');

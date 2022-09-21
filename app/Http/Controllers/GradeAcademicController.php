@@ -20,10 +20,9 @@ use Illuminate\Http\Request;
 | Set Academics Grade Controller v1.1.0
 |--------------------------------------------------------------------------
 |
-| Controller for create students subject total mark and grade
+| Create students academic subject total mark and grade
 | based on request values from submit form.
-| Author:mdherwan@gmail.com
-| Date: 13 Sept 2022.
+| Author:mdherwan@gmail.com Date: 13 Sept 2022.
 |
 */
 
@@ -50,7 +49,7 @@ class GradeAcademicController extends Controller
     ) {
         try {
             $students = $studentsAction->handle($request);
-            $totalMarksService->handle($students);
+            $totalMarksService->handle($students);exit;
             $gradeAction->handle($students);
         } catch (Exception $e) {
             return back()->withError($e->getMessage());

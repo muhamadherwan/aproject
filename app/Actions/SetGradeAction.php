@@ -11,10 +11,9 @@ use App\Models\MarksAcademic;
 | Set Students Detail v1.1.0
 |--------------------------------------------------------------------------
 |
-| Action class for set students academic subject
-| grade based on total mark.
-| Author:mdherwan@gmail.com
-| Date: 13 Sept 2022.
+| Set students academic subject grade based on total mark, stored in
+| grades table and update is graded status to 1 in marks_academics table.
+| Author:mdherwan@gmail.com Date: 13 Sept 2022.
 |
 */
 
