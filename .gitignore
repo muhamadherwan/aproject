@@ -14,3 +14,6 @@ yarn-error.log
 /.idea
 /.vscode
 database/seeders/MarksAcademicsTableSeeder.php
+_ide_helper.php
+_ide_helper_models.php
+storage/debugbar/.gitignore
