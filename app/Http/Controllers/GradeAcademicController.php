@@ -45,14 +45,14 @@ class GradeAcademicController extends Controller
 //        print count($students);exit;
 
         if (count($students) > 0) {
-//            foreach ($students as $student)
-//            {
-//                $studentsDetailsFk = $student->id;
-//                $totalMark = $this->setTotalMarks($student);
-//                $gradeRow = Grade::where('students_details_fk', $studentsDetailsFk)->count();
-//                if ($gradeRow == 0) { Grade::create(['students_details_fk' => $studentsDetailsFk]); }
-//                $graded = $this->setGrade($studentsDetailsFk);
-//            }
+            foreach ($students as $student)
+            {
+                $studentsDetailsFk = $student->id;
+                $totalMark = $this->setTotalMarks($student);
+                $gradeRow = Grade::where('students_details_fk', $studentsDetailsFk)->count();
+                if ($gradeRow == 0) { Grade::create(['students_details_fk' => $studentsDetailsFk]); }
+                $graded = $this->setGrade($studentsDetailsFk);
+            }
             return back()->with('success', 'Gred akademik berjaya dijana.');
         }
         return back()->with('error', 'Gred akademik gagal dijana.');
