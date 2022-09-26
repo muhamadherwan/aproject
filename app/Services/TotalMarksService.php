@@ -6,7 +6,10 @@ use App\Models\MarksAcademic;
 use App\Models\StudentsDetail;
 use App\Models\SubjectAcademicsDetail;
 use Exception;
-use stdClass; // will remove this for prod.only use for dev on set wajaran dummy value.
+use Illuminate\Support\Facades\Storage;
+use stdClass;
+
+// will remove this for prod.only use for dev on set wajaran dummy value.
 
 /*
 |--------------------------------------------------------------------------
@@ -40,6 +43,8 @@ class TotalMarksService
             )->get('id');
 
             $agama = $collection->isEmpty() ? $this->create($student, 7) : $this->create($student, 6);
+
+            $storedTofile = $this->store3($student,);
         }
 
         return true;
@@ -97,7 +102,7 @@ class TotalMarksService
         $markB1 = $this->getMarkB1($student);
         $markA1 = $this->getMarkA1($student);
         $markA2 = $this->getMarkA2($student);
-        $markA2 = ( 4 == $student->subject) ? $markA2[0]->mark_a2 ?? 0 : $markA2[0]->mark_a2;
+        $markA2 = (4 == $student->subject) ? $markA2[0]->mark_a2 ?? 0 : $markA2[0]->mark_a2;
 
         if ((-1 != $markB1[0]->mark_b1) || (-1 != $markA1[0]->mark_a1) || (-1 != $markA2)) {
             $wajaran_berterusan = $this->getWajaranBerterusan($student);
