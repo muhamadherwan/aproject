@@ -51,8 +51,13 @@ Route::prefix('grade')->group(function () {
     Route::get('academics', [GradeAcademicController::class, 'create'])->name('grade.academics.create');
     Route::post('academics/generate', [GradeAcademicController::class, 'store'])->name('grade.academics.store');
 
-    Route::resource('vocationals', GradeVocationalController::class);
-    Route::get('getColleges/', [GradeVocationalController::class, 'getColleges']);
+    Route::get('vocationals', [GradeVocationalController::class, 'create'])->name('grade.vocational.create');
+    Route::post('vocationals/generate', [GradeVocationalController::class, 'store'])->name('grade.vocational.store');
+
+
+
+//    Route::resource('vocationals', GradeVocationalController::class);
+//    Route::get('getColleges/', [GradeVocationalController::class, 'getColleges']);
 //    Route::get('getCourses/', [GradeVocationalController::class, 'getCourses']);
 });
 

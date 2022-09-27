@@ -43,8 +43,6 @@ class TotalMarksService
             )->get('id');
 
             $agama = $collection->isEmpty() ? $this->create($student, 7) : $this->create($student, 6);
-
-            $storedTofile = $this->store3($student,);
         }
 
         return true;
@@ -87,7 +85,7 @@ class TotalMarksService
             )->update(['total_marks' => $totalMarks]);
         }
 
-        if ((-1 != $markB1[0]->mark_b1) || (-1 != $markA1[0]->mark_a1)) {
+        if ((-1 == $markB1[0]->mark_b1) || (-1 == $markA1[0]->mark_a1)) {
             $this->setTotalMarksNegative($student);
         }
 
@@ -120,7 +118,7 @@ class TotalMarksService
             )->update(['total_marks' => $totalMarks]);
         }
 
-        if ((-1 != $markB1[0]->mark_b1) || (-1 != $markA1[0]->mark_a1) || (-1 != $markA2)) {
+        if ((-1 == $markB1[0]->mark_b1) || (-1 == $markA1[0]->mark_a1) || (-1 != $markA2)) {
             $this->setTotalMarksNegative($student);
         }
 

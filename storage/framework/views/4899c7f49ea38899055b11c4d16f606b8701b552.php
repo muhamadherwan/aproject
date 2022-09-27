@@ -154,7 +154,7 @@
                         </a>
                         <div class="dropdown-menu" aria-labelledby="topnav-pages">
                             <a href="<?php echo e(route('grade.academics.create')); ?>" class="dropdown-item" key="t-chat">Akademik</a>
-                            <a href="<?php echo e(route('vocationals.index')); ?>" class="dropdown-item" key="t-chat">
+                            <a href="<?php echo e(route('grade.vocational.create')); ?>" class="dropdown-item" key="t-chat">
                                 Vokasional</a>
                             <a href="#" class="dropdown-item" key="t-chat">Bahasa Melayu</a>
                             <a href="#" class="dropdown-item" key="t-chat">Sejarah</a>
