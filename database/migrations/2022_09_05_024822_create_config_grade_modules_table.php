@@ -10,7 +10,7 @@ return new class extends Migration {
      *
      * @return void
      */
-    public function up()w
+    public function up()
     {
         Schema::create('config_grade_modules', function (Blueprint $table) {
             $table->id();

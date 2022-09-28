@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Actions\SetGradeVocationalAction;
+use App\Services\GradeVocationalService;
 use App\Services\TotalMarksVocationalService;
 use Exception;
 use App\Actions\GetStudentsAction;
@@ -45,12 +46,12 @@ class GradeVocationalController extends Controller
         Request $request,
         GetStudentsAction $studentsAction,
         TotalMarksVocationalService $totalMarksVocationalService,
-        SetGradeVocationalAction $gradeAction
+        GradeVocationalService $gradeVocationalService
     ) {
         try {
             $students = $studentsAction->handle($request);
             $totalMarksVocationalService->handle($students);
-            $gradeAction->handle($students);
+            $gradeVocationalService->handle($students);
         } catch (Exception $e) {
             return back()->withError($e->getMessage());
         }
