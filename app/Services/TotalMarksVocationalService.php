@@ -11,9 +11,6 @@ class TotalMarksVocationalService
     public function handle(object $students): bool
     {
         foreach ($students as $student) {
-            // id for test
-//            $student->id = 14842;
-
             $collection = MarksVocational::where('students_details_fk', $student->id)->get();
 
             $this->store($collection);

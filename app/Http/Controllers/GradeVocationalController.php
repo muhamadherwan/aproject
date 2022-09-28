@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Actions\SetGradeAction;
 use App\Actions\SetGradeVocationalAction;
 use App\Services\TotalMarksVocationalService;
 use Exception;
@@ -21,7 +20,7 @@ use Illuminate\Http\Request;
 | Set Vocational Grade Controller v1.1.0
 |--------------------------------------------------------------------------
 |
-| Create students vocational subject total mark and grade
+| Create students vocational module total mark and grade
 | based on request values from submit form.
 | Author:mdherwan@gmail.com Date: 27 Sept 2022.
 |

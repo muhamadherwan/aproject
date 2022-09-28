@@ -13,7 +13,7 @@ use App\Models\Module;
 | Set Students Vocational Grade v1.1.0
 |--------------------------------------------------------------------------
 |
-| Set students vocational mod grade module based on total mark, stored in
+| Set students vocational module grade based on total mark, stored in
 | grades table and update is graded status to 1 in marks_vocational table.
 | Author:mdherwan@gmail.com Date: 27 Sept 2022.
 |
