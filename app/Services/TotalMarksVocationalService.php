@@ -12,7 +12,7 @@ class TotalMarksVocationalService
     {
         foreach ($students as $student) {
             // id for test
-            $student->id = 14842;
+//            $student->id = 14842;
 
             $collection = MarksVocational::where('students_details_fk', $student->id)->get();
 

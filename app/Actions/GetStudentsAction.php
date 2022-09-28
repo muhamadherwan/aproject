@@ -3,6 +3,7 @@
 namespace App\Actions;
 
 use App\Models\StudentsDetail;
+use Exception;
 use Illuminate\Http\Request;
 
 /*
@@ -19,7 +20,7 @@ use Illuminate\Http\Request;
 class GetStudentsAction
 {
     /**
-     * @throws \Exception
+     * @throws Exception
      */
     public function handle(Request $request): object
     {
@@ -40,7 +41,7 @@ class GetStudentsAction
         $collection = $query->get(['id', 'students_fk', 'semester', 'year']);
 
         if ($collection->isEmpty()) {
-            throw new \Exception('Tiada rekod pelajar ditemui di dalam pangkalan data.');
+            throw new Exception('Tiada rekod pelajar ditemui di dalam pangkalan data.');
         }
 
         return $collection;
