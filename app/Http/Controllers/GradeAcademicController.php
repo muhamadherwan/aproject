@@ -49,7 +49,7 @@ class GradeAcademicController extends Controller
     ) {
         try {
             $students = $studentsAction->handle($request);
-            $totalMarksService->handle($students);exit;
+            $totalMarksService->handle($students);
             $gradeAction->handle($students);
         } catch (Exception $e) {
             return back()->withError($e->getMessage());
