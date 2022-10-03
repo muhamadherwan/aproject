@@ -26,9 +26,13 @@ class GradeVocationalService
             $gradeRow = Grade::where('students_details_fk', $student->id)->count();
 
             if ($gradeRow == 0) {
-                Grade::create(['students_details_fk' => $student->id]);
+//                Grade::create(['students_details_fk' => $student->id]);
+                Grade::create([
+                    'students_details_fk' => $student->id
+//                    'is_competent' => 1
+                ]);
             }
-
+//exit;
             $this->setModuleGrade($student);
         }
         return true;
@@ -70,11 +74,19 @@ class GradeVocationalService
                 8 => 'grade_module8',
             };
 
-            Grade::where('students_details_fk', $student->id)->update([$row => $grade[0]->grade]);
+            Grade::where('students_details_fk', $student->id)
+                ->update([$row => $grade[0]->grade]);
+
+            if (('C+' != $grade[0]->grade) || ('D' != $grade[0]->grade) || ('D-' != $grade[0]->grade)
+                || ('D+' != $grade[0]->grade) || ('E' != $grade[0]->grade) || ('T' != $grade[0]->grade)) {
+                Grade::where('students_details_fk', $student->id)
+                    ->update(['is_competent' => 1]);
+            }
 
             MarksVocational::where('students_details_fk', $student->id)
                 ->where('modules_fk', $module->modules_fk)
                 ->update(['is_graded' => 1]);
         }
     }
+
 }
