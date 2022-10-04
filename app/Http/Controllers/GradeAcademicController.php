@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Actions\SetGradeAction;
-use App\Services\TotalMarksService;
+use App\Services\MarksAcademicService;
 use Exception;
 use App\Actions\GetStudentsAction;
 use App\Models\College;
@@ -44,12 +44,12 @@ class GradeAcademicController extends Controller
     public function store(
         Request $request,
         GetStudentsAction $studentsAction,
-        TotalMarksService $totalMarksService,
+        MarksAcademicService $marksAcademicService,
         SetGradeAction $gradeAction
     ) {
         try {
             $students = $studentsAction->handle($request);
-            $totalMarksService->handle($students);
+            $marksAcademicService->handle($students);
             $gradeAction->handle($students);
         } catch (Exception $e) {
             return back()->withError($e->getMessage());
