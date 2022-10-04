@@ -14,20 +14,32 @@ use App\Models\StudentsDetail;
 use App\Models\SubjectAcademicsDetail;
 use Exception;
 
+/*
+|--------------------------------------------------------------------------
+| Set Academics Subject Total Mark Queue Job v1.2.0
+|--------------------------------------------------------------------------
+|
+| Set academic subject total mark based on semester
+| and dispatch to job queue for stored in db process.
+| Author:mdherwan@gmail.com
+| Created: 05 Oct 2022.
+|
+*/
+
 class ProcessMarksAcademic implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    public $students;
+    public object $student;
 
     /**
      * Create a new job instance.
      *
      * @return void
      */
-    public function __construct($students)
+    public function __construct($student)
     {
-        $this->students = $students;
+        $this->student = $student;
     }
 
     /**
@@ -37,34 +49,22 @@ class ProcessMarksAcademic implements ShouldQueue
      */
     public function handle()
     {
-//        foreach ($this->students as $student) {
-//            $bm = (4 != $student->semester) ? $this->create($student, 1) : $this->createBMSetara($student);
-//            $bi = $this->create($student, 2);
-//            $mt = $this->create($student, 3);
-//            $sn = $this->create($student, 4);
-//            $sj = (4 != $student->semester) ? $this->create($student, 5) : $this->createSJSetara($student);
-//
-//            $collection = MarksAcademic::where('students_details_fk', $student->id)->where(
-//                'subject_academics_fk',
-//                '6'
-//            )->get('id');
-//
-//            $agama = $collection->isEmpty() ? $this->create($student, 7) : $this->create($student, 6);
-//
-//        }
-        $student = $this->students;
-        $bm = (4 != $student->semester) ? $this->create($student, 1) : $this->createBMSetara($student);
-        $bi = $this->create($student, 2);
-        $mt = $this->create($student, 3);
-        $sn = $this->create($student, 4);
-        $sj = (4 != $student->semester) ? $this->create($student, 5) : $this->createSJSetara($student);
+        $bm = (4 != $this->student->semester) ? $this->create($this->student, 1) : $this->createBMSetara(
+            $this->student
+        );
+        $bi = $this->create($this->student, 2);
+        $mt = $this->create($this->student, 3);
+        $sn = $this->create($this->student, 4);
+        $sj = (4 != $this->student->semester) ? $this->create($this->student, 5) : $this->createSJSetara(
+            $this->student
+        );
 
-        $collection = MarksAcademic::where('students_details_fk', $student->id)->where(
+        $collection = MarksAcademic::where('students_details_fk', $this->student->id)->where(
             'subject_academics_fk',
             '6'
         )->get('id');
 
-        $agama = $collection->isEmpty() ? $this->create($student, 7) : $this->create($student, 6);
+        $agama = $collection->isEmpty() ? $this->create($this->student, 7) : $this->create($this->student, 6);
     }
 
     /**
@@ -144,6 +144,132 @@ class ProcessMarksAcademic implements ShouldQueue
         return true;
     }
 
+    /**
+     * @throws Exception
+     */
+    private function getTotalMark(int $studentsFk, int $sem): object
+    {
+        $studentsDetailsFk = StudentsDetail::where('students_fk', $studentsFk)
+            ->where('semester', $sem)
+            ->get('id');
+
+        $collection = MarksAcademic::where('students_details_fk', $studentsDetailsFk[0]['id'])
+            ->where('subject_academics_fk', '1')
+            ->get('total_marks');
+
+        if ($collection->isEmpty()) {
+            throw new Exception(
+                "Gred akademik tidak berjaya dijana. Tiada rekod markah Bahasa Melayu bagi semester $sem."
+            );
+        }
+
+        return $collection;
+    }
+
+    /**
+     * @throws Exception
+     */
+    private function getMarkB1(object $student): object
+    {
+        $collection = MarksAcademic::where('students_details_fk', $student->id)->where(
+            'subject_academics_fk',
+            $student->subject
+        )->get('mark_b1');
+
+        if ($collection->isEmpty()) {
+            throw new Exception('Gred akademik tidak berjaya dijana. Tiada rekod markah berterusan 1.');
+        }
+
+        return $collection;
+    }
+
+    /**
+     * @throws Exception
+     */
+    private function getMarkA1(object $student): object
+    {
+        $collection = MarksAcademic::where('students_details_fk', $student->id)->where(
+            'subject_academics_fk',
+            $student->subject
+        )->get('mark_a1');
+
+        if ($collection->isEmpty()) {
+            throw new Exception('Gred akademik tidak berjaya dijana. Tiada rekod markah akhir 1.');
+        }
+
+        return $collection;
+    }
+
+    /**
+     * @throws Exception
+     */
+    private function getMarkA2(object $student): object
+    {
+        $collection = MarksAcademic::where('students_details_fk', $student->id)->where(
+            'subject_academics_fk',
+            $student->subject
+        )->get('mark_a2');
+
+        if ($collection->isEmpty()) {
+            throw new Exception('Gred akademik tidak berjaya dijana. Tiada rekod markah akhir 2.');
+        }
+
+        return $collection;
+    }
+
+    /**
+     * @throws Exception
+     */
+    private function setTotalMarksNegative(object $student): bool
+    {
+        $collection = MarksAcademic::where('students_details_fk', $student->id)
+            ->where('subject_academics_fk', $student->subject)
+            ->update(['total_marks' => -1]);
+
+        if ($collection != true) {
+            throw new Exception('Gred akademik tidak berjaya dijana. Tiada rekod markah -1');
+        }
+
+        return true;
+    }
+
+    /**
+     * @throws Exception
+     */
+    private function getWajaranBerterusan(object $student): object
+    {
+        $collection = SubjectAcademicsDetail::where('year', $student->year)
+            ->where('semester', $student->semester)
+            ->where('subject_academics_fk', $student->subject)
+            ->get('continuous');
+
+        if ($collection->isEmpty()) {
+            throw new Exception('Gred akademik tidak berjaya dijana. Tiada rekod wajaran berterusan.');
+        }
+
+        return $collection;
+    }
+
+    /**
+     * @throws Exception
+     */
+    private function getWajaranAkhir(object $student, int $type): object
+    {
+        $final = (1 == $type) ? 'final1' : 'final2';
+
+        $collection = SubjectAcademicsDetail::where('year', $student->year)
+            ->where('semester', $student->semester)
+            ->where('subject_academics_fk', $student->subject)
+            ->get($final);
+
+        if ($collection->isEmpty()) {
+            throw new \Exception('Gred akademik tidak berjaya dijana. Tiada rekod wajaran akhir.');
+        }
+
+//        $collection ?: throw new Exception('Gred akademik tidak berjaya dijana. Tiada rekod wajaran akhir.');
+        return $collection;
+    }
+
     private function createBMSetara(object $student): bool
     {
         $student->subject = 1;
@@ -220,133 +346,6 @@ class ProcessMarksAcademic implements ShouldQueue
         }
 
         return true;
-    }
-
-    /**
-     * @throws Exception
-     */
-    private function getTotalMark(int $studentsFk, int $sem): object
-    {
-        $studentsDetailsFk = StudentsDetail::where('students_fk', $studentsFk)
-            ->where('semester', $sem)
-            ->get('id');
-
-        $collection = MarksAcademic::where('students_details_fk', $studentsDetailsFk[0]['id'])
-            ->where('subject_academics_fk', '1')
-            ->get('total_marks');
-
-        if ($collection->isEmpty()) {
-            throw new Exception(
-                "Gred akademik tidak berjaya dijana. Tiada rekod markah Bahasa Melayu bagi semester $sem."
-            );
-        }
-
-        return $collection;
-    }
-
-    /**
-     * @throws Exception
-     */
-    private function getMarkB1(object $student): object
-    {
-        $collection = MarksAcademic::where('students_details_fk', $student->id)->where(
-            'subject_academics_fk',
-            $student->subject
-        )->get('mark_b1');
-
-        if ($collection->isEmpty()) {
-            throw new Exception('Gred akademik tidak berjaya dijana. Tiada rekod markah berterusan 1.');
-        }
-
-        return $collection;
-    }
-
-    /**
-     * @throws Exception
-     */
-    private function getMarkA1(object $student): object
-    {
-        $collection = MarksAcademic::where('students_details_fk', $student->id)->where(
-            'subject_academics_fk',
-            $student->subject
-        )->get('mark_a1');
-
-        if ($collection->isEmpty()) {
-            throw new Exception('Gred akademik tidak berjaya dijana. Tiada rekod markah akhir 1.');
-        }
-
-        return $collection;
-    }
-
-    /**
-     * @throws Exception
-     */
-    private function getMarkA2(object $student): object
-    {
-        $collection = MarksAcademic::where('students_details_fk', $student->id)->where(
-            'subject_academics_fk',
-            $student->subject
-        )->get('mark_a2');
-
-        if ($collection->isEmpty()) {
-            throw new Exception('Gred akademik tidak berjaya dijana. Tiada rekod markah akhir 2.');
-        }
-
-        return $collection;
-    }
-
-
-    /**
-     * @throws Exception
-     */
-    private function setTotalMarksNegative(object $student): bool
-    {
-        $collection = MarksAcademic::where('students_details_fk', $student->id)
-            ->where('subject_academics_fk', $student->subject)
-            ->update(['total_marks' => -1]);
-
-        if ($collection != true) {
-            throw new Exception('Gred akademik tidak berjaya dijana. Tiada rekod markah -1');
-        }
-
-        return true;
-    }
-
-    /**
-     * @throws Exception
-     */
-    private function getWajaranBerterusan(object $student): object
-    {
-        $collection = SubjectAcademicsDetail::where('year', $student->year)
-            ->where('semester', $student->semester)
-            ->where('subject_academics_fk', $student->subject)
-            ->get('continuous');
-
-        if ($collection->isEmpty()) {
-            throw new Exception('Gred akademik tidak berjaya dijana. Tiada rekod wajaran berterusan.');
-        }
-
-        return $collection;
-    }
-
-    /**
-     * @throws Exception
-     */
-    private function getWajaranAkhir(object $student, int $type): object
-    {
-        $final = (1 == $type) ? 'final1' : 'final2';
-
-        $collection = SubjectAcademicsDetail::where('year', $student->year)
-            ->where('semester', $student->semester)
-            ->where('subject_academics_fk', $student->subject)
-            ->get($final);
-
-        if ($collection->isEmpty()) {
-            throw new \Exception('Gred akademik tidak berjaya dijana. Tiada rekod wajaran akhir.');
-        }
-
-//        $collection ?: throw new Exception('Gred akademik tidak berjaya dijana. Tiada rekod wajaran akhir.');
-        return $collection;
     }
 
 }
