@@ -49,6 +49,7 @@ class GradeAcademicController extends Controller
     ) {
         try {
             $students = $studentsAction->handle($request);
+//            dd($students);
             $marksAcademicService->handle($students);
 //            $gradeAction->handle($students);
         } catch (Exception $e) {
