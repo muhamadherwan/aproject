@@ -50,7 +50,7 @@ class GradeAcademicController extends Controller
         try {
             $students = $studentsAction->handle($request);
             $marksAcademicService->handle($students);
-            $gradeAction->handle($students);
+//            $gradeAction->handle($students);
         } catch (Exception $e) {
             return back()->withError($e->getMessage());
         }

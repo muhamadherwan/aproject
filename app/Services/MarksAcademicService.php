@@ -30,29 +30,13 @@ class MarksAcademicService
     public function handle(object $students): bool
     {
         $chunks = $students->chunk(100);
-//        dd($chunks);
-//        $chunks = $students->chunk(10)->toArray();
-
-//dd($chunks);
 
         foreach ($chunks as $chunk) {
             ProcessMarksAcademic::dispatch($chunk);
-
-//            dd($chunk);
-//            foreach ($chunk as $student) {
-//                $bm = 1;
-//                $student->subject = $bm;
-////                dd($student);
-//                $totalMarks = 5;
-////dd($student);
-//                $res = MarksAcademic::where('students_details_fk', $student->id)
-//                    ->where('subject_academics_fk', $student->subject)
-//                    ->update(['total_marks' => $totalMarks]);
-//            }
         }
 
-return true;
-}
+        return true;
+    }
 
 ///**
 // * @throws Exception
