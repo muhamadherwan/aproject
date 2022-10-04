@@ -28,7 +28,6 @@ class ProcessMarksAcademic implements ShouldQueue
     public function __construct($students)
     {
         $this->students = $students;
-
     }
 
     /**
@@ -38,21 +37,34 @@ class ProcessMarksAcademic implements ShouldQueue
      */
     public function handle()
     {
-        foreach ($this->students as $student) {
-            $bm = (4 != $student->semester) ? $this->create($student, 1) : $this->createBMSetara($student);
-            $bi = $this->create($student, 2);
-            $mt = $this->create($student, 3);
-            $sn = $this->create($student, 4);
-            $sj = (4 != $student->semester) ? $this->create($student, 5) : $this->createSJSetara($student);
+//        foreach ($this->students as $student) {
+//            $bm = (4 != $student->semester) ? $this->create($student, 1) : $this->createBMSetara($student);
+//            $bi = $this->create($student, 2);
+//            $mt = $this->create($student, 3);
+//            $sn = $this->create($student, 4);
+//            $sj = (4 != $student->semester) ? $this->create($student, 5) : $this->createSJSetara($student);
+//
+//            $collection = MarksAcademic::where('students_details_fk', $student->id)->where(
+//                'subject_academics_fk',
+//                '6'
+//            )->get('id');
+//
+//            $agama = $collection->isEmpty() ? $this->create($student, 7) : $this->create($student, 6);
+//
+//        }
+        $student = $this->students;
+        $bm = (4 != $student->semester) ? $this->create($student, 1) : $this->createBMSetara($student);
+        $bi = $this->create($student, 2);
+        $mt = $this->create($student, 3);
+        $sn = $this->create($student, 4);
+        $sj = (4 != $student->semester) ? $this->create($student, 5) : $this->createSJSetara($student);
 
-            $collection = MarksAcademic::where('students_details_fk', $student->id)->where(
-                'subject_academics_fk',
-                '6'
-            )->get('id');
+        $collection = MarksAcademic::where('students_details_fk', $student->id)->where(
+            'subject_academics_fk',
+            '6'
+        )->get('id');
 
-            $agama = $collection->isEmpty() ? $this->create($student, 7) : $this->create($student, 6);
-
-        }
+        $agama = $collection->isEmpty() ? $this->create($student, 7) : $this->create($student, 6);
     }
 
     /**
@@ -107,7 +119,7 @@ class ProcessMarksAcademic implements ShouldQueue
         $markB1 = $this->getMarkB1($student);
         $markA1 = $this->getMarkA1($student);
         $markA2 = $this->getMarkA2($student);
-        $markA2 = ( 4 == $student->subject) ? $markA2[0]->mark_a2 ?? 0 : $markA2[0]->mark_a2;
+        $markA2 = (4 == $student->subject) ? $markA2[0]->mark_a2 ?? 0 : $markA2[0]->mark_a2;
 
         if ((-1 != $markB1[0]->mark_b1) || (-1 != $markA1[0]->mark_a1) || (-1 != $markA2)) {
             $wajaran_berterusan = $this->getWajaranBerterusan($student);

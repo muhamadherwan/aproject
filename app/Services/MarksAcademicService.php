@@ -12,13 +12,13 @@ use stdClass;
 
 /*
 |--------------------------------------------------------------------------
-| Set Academics Subject Total Mark v1.2.0
+| Set Academics Subject Total Mark v1.3.0
 |--------------------------------------------------------------------------
 |
 | Set students academic subject total mark based on semester
 | and stored in db.
 | Author:mdherwan@gmail.com
-| Created: 13 Sept 2022. Updated: 03 Oct 2022.
+| Created: 06 Oct 2022.
 |
 */
 
@@ -29,11 +29,17 @@ class MarksAcademicService
      */
     public function handle(object $students): bool
     {
-        $chunks = $students->chunk(100);
 
-        foreach ($chunks as $chunk) {
-            ProcessMarksAcademic::dispatch($chunk);
+//        $chunks = $students->chunk(500);
+
+//        foreach ($chunks as $chunk) {
+////            ProcessMarksAcademic::dispatch($chunk);
+//        }
+
+        foreach ($students as $student) {
+            ProcessMarksAcademic::dispatch($student);
         }
+
 
         return true;
     }
