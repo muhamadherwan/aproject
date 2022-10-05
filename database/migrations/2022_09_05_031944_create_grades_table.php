@@ -32,6 +32,7 @@ return new class extends Migration {
             $table->integer('academic_credit_hour_cum')->nullable();
             $table->decimal('academic_pointer_cum', 8, 2)->nullable();
 
+            $table->string('grade_module1')->nullable();
             $table->string('grade_module2')->nullable();
             $table->string('grade_module3')->nullable();
             $table->string('grade_module4')->nullable();

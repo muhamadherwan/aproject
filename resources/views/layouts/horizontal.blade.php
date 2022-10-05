@@ -166,8 +166,7 @@
                         </a>
                         <div class="dropdown-menu" aria-labelledby="topnav-pages">
                             <a href="{{ route('grade.academics.create') }}" class="dropdown-item" key="t-chat">Akademik</a>
-                            <a href="{{ route('vocationals.index') }}" class="dropdown-item" key="t-chat">
-                                Vokasional</a>
+                            <a href="{{ route('grade.vocationals.create') }}" class="dropdown-item" key="t-chat">Vokasional</a>
                             <a href="#" class="dropdown-item" key="t-chat">Bahasa Melayu</a>
                             <a href="#" class="dropdown-item" key="t-chat">Sejarah</a>
                             <a href="#" class="dropdown-item" key="t-chat">Bahasa Melayu Ulang</a>

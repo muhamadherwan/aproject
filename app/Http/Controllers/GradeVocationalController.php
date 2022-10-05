@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Actions\GetStudentsAction;
+use App\Actions\GradeVocationalAction;
 use App\Models\College;
 use App\Models\ConfigCollegesType;
 use App\Models\ConfigSemester;
@@ -9,86 +11,40 @@ use App\Models\ConfigSession;
 use App\Models\ConfigState;
 use App\Models\ConfigYear;
 use App\Models\Course;
+use App\Services\MarksVocationalService;
+use Exception;
 use Illuminate\Http\Request;
 
 class GradeVocationalController extends Controller
 {
-    public function index()
+    public function create()
     {
-        $states = ConfigState::all();
-        $collegeTypes = ConfigCollegesType::all();
-        $colleges = College::all()->where('config_colleges_types_fk', '=', '1');
-        $years = ConfigYear::all();
-        $semesters = ConfigSemester::all();
-        $sessions = ConfigSession::all();
-        return view('modules.grade.vocationals.index', compact('states', 'collegeTypes', 'colleges', 'years', 'semesters', 'sessions'));
+        return view('modules.grade.vocationals.create', [
+            'states' => ConfigState::get(["parameter", "id"]),
+            'collegeTypes' => ConfigCollegesType::get(["parameter", "id"]),
+            'colleges' => College::get(["id", "code", "name"]),
+            'years' => ConfigYear::get("parameter"),
+            'semesters' => ConfigSemester::get(["id", "parameter"]),
+            'sessions' => ConfigSession::get(["id", "parameter"]),
+            'courses' => Course::get(["id", "code", "name"])
+        ]);
     }
 
-
-    public function getColleges(Request $request)
-    {
-
+    public function store(
+        Request $request,
+        GetStudentsAction $studentsAction,
+        MarksVocationalService $marksVocationalService,
+        GradeVocationalAction $gradeVocationalAction
+    ) {
         try {
-            $selectedState = $request->input('selectedState');
-            $selectedType = $request->input('selectedType');
-
-            $data = College::all();
-
-            if ($selectedState != 'all') {
-                $data = $data->where('config_states_fk', $selectedState);
-            }
-
-            if ($selectedType != 'all') {
-                $data = $data->where('config_colleges_types_fk', $selectedType);
-            }
-
-            http_response_code(200);
-            return response([
-                'message' => 'Data successfully retrieved.',
-                'data' => $data
-            ]);
-        } catch (RequestException $r) {
-
-            http_response_code(400);
-            return response([
-                'message' => 'Failed to retrieve data.',
-                'errorCode' => 4103
-            ], 400);
+            $students = $studentsAction->handle($request);
+            $marksVocationalService->handle($students);
+            $gradeVocationalAction->handle($students);
+        } catch
+        (Exception $e) {
+            return back()->withError($e->getMessage());
         }
-    }
 
-//    public function getCourses(Request $request)
-//    {
-//        try {
-//            $selectedCollege = $request->input('selectedCollege');
-//            $selectedYear = $request->input('selectedYear');
-//
-//            $query =
-//                Course::join('colleges_courses', 'colleges_courses.courses_fk', '=', 'courses.id')
-//                    ->select('courses.id', 'courses.code', 'courses.name');
-//
-//            if ($selectedCollege != 'all') {
-//                $query = $query->where('colleges_courses.colleges_fk', $selectedCollege);
-//            }
-//
-//            if ($selectedYear != '0') {
-//                $query = $query->where('courses.year', $selectedYear);
-//            }
-//
-//            $data = !empty($query) ? $query->get() : [];
-//
-//            http_response_code(200);
-//            return response([
-//                'message' => 'Data successfully retrieved.',
-//                'data' => $data
-//            ]);
-//        } catch (RequestException $r) {
-//
-//            http_response_code(400);
-//            return response([
-//                'message' => 'Failed to retrieve data.',
-//                'errorCode' => 4103
-//            ], 400);
-//        }
-//    }
+        return back()->with('success', 'Gred Vokasional berjaya dijana.');
+    }
 }

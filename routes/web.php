@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\GradeVocationalController;
 use App\Http\Controllers\SearchController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -10,7 +11,7 @@ use App\Http\Controllers\AcademicFinalAssessmentController;
 use App\Http\Controllers\UserController;
 
 use App\Http\Controllers\GradeAcademicController;
-use App\Http\Controllers\GradeVocationalController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -51,9 +52,9 @@ Route::prefix('grade')->group(function () {
     Route::get('academics', [GradeAcademicController::class, 'create'])->name('grade.academics.create');
     Route::post('academics/generate', [GradeAcademicController::class, 'store'])->name('grade.academics.store');
 
-    Route::resource('vocationals', GradeVocationalController::class);
-    Route::get('getColleges/', [GradeVocationalController::class, 'getColleges']);
-//    Route::get('getCourses/', [GradeVocationalController::class, 'getCourses']);
+    Route::get('vocationals', [GradeVocationalController::class, 'create'])->name('grade.vocationals.create');
+    Route::post('vocationals/generate', [GradeVocationalController::class, 'store'])->name('grade.vocational.store');
+
 });
 
 
