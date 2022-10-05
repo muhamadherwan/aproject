@@ -28,7 +28,10 @@ use Exception;
 
 class ProcessMarksAcademic implements ShouldQueue
 {
-    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+    use Dispatchable;
+    use InteractsWithQueue;
+    use Queueable;
+    use SerializesModels;
 
     public object $student;
 
@@ -46,6 +49,7 @@ class ProcessMarksAcademic implements ShouldQueue
      * Execute the job.
      *
      * @return void
+     * @throws Exception
      */
     public function handle()
     {
