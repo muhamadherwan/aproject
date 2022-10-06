@@ -75,8 +75,6 @@ class ProcessGradeAcademic implements ShouldQueue
 
             $gradeRow = Grade::where('students_details_fk', $this->student->id)->count();
 
-//            dd($gradeRow);
-
             if ($gradeRow == 0) {
                 Grade::create(['students_details_fk' => $this->student->id]);
             }
