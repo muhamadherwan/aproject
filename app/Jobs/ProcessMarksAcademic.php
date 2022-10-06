@@ -3,6 +3,7 @@
 namespace App\Jobs;
 
 use App\Models\MarksAcademic;
+use Illuminate\Bus\Batchable;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -16,7 +17,7 @@ use Exception;
 
 /*
 |--------------------------------------------------------------------------
-| Set Academics Subject Total Mark Queue Job v1.2.0
+| Set Academics Subject Total Mark Queue Job v1.3.0
 |--------------------------------------------------------------------------
 |
 | Set academic subject total mark based on semester
@@ -32,6 +33,7 @@ class ProcessMarksAcademic implements ShouldQueue
     use InteractsWithQueue;
     use Queueable;
     use SerializesModels;
+    use Batchable;
 
     public object $student;
 

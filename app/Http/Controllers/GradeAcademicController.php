@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Actions\SetGradeAction;
+use App\Jobs\ProcessGradeAcademic;
+use App\Jobs\ProcessMarksAcademic;
 use App\Services\MarksAcademicService;
 use Exception;
 use App\Actions\GetStudentsAction;
@@ -13,7 +15,10 @@ use App\Models\ConfigSession;
 use App\Models\ConfigState;
 use App\Models\ConfigYear;
 use App\Models\Course;
+use Illuminate\Bus\Batch;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Bus;
+use Throwable;
 
 /*
 |--------------------------------------------------------------------------
@@ -28,8 +33,31 @@ use Illuminate\Http\Request;
 
 class GradeAcademicController extends Controller
 {
-    public function create()
+//    public function create()
+//    {
+//        return view('modules.grade.academics.create', [
+//            'states' => ConfigState::get(["parameter", "id"]),
+//            'collegeTypes' => ConfigCollegesType::get(["parameter", "id"]),
+//            'colleges' => College::get(["id", "code", "name"]),
+//            'years' => ConfigYear::get("parameter"),
+//            'semesters' => ConfigSemester::get(["id", "parameter"]),
+//            'sessions' => ConfigSession::get(["id", "parameter"]),
+//            'courses' => Course::get(["id", "code", "name"])
+//        ]);
+//    }
+
+    public function create(Request $request)
     {
+        $batch = null;
+        if ($request->batch_id) {
+            $batch = Bus::findBatch($request->batch_id);
+        }
+
+        $batch2 = null;
+        if ($request->batch2_id) {
+            $batch2 = Bus::findBatch($request->batch2_id);
+        }
+
         return view('modules.grade.academics.create', [
             'states' => ConfigState::get(["parameter", "id"]),
             'collegeTypes' => ConfigCollegesType::get(["parameter", "id"]),
@@ -37,7 +65,9 @@ class GradeAcademicController extends Controller
             'years' => ConfigYear::get("parameter"),
             'semesters' => ConfigSemester::get(["id", "parameter"]),
             'sessions' => ConfigSession::get(["id", "parameter"]),
-            'courses' => Course::get(["id", "code", "name"])
+            'courses' => Course::get(["id", "code", "name"]),
+            'batch' => $batch,
+            'batch2' => $batch2
         ]);
     }
 
@@ -49,12 +79,48 @@ class GradeAcademicController extends Controller
     ) {
         try {
             $students = $studentsAction->handle($request);
-            $marksAcademicService->handle($students);
-            $gradeAction->handle($students);
+
+//            dd($students);
+//            $marksAcademic    Service->handle($students);
+//            $gradeAction->handle($students);
+            $batch = Bus::batch([])->name('Jana Markah')->dispatch();
+            foreach ($students as $student) {
+                  $batch->add(new ProcessMarksAcademic($student));
+//                $batch->add(new ProcessGradeAcademic($student));
+//                ProcessMarksAcademic::dispatch($student);
+            }
+
+            $batch2 = Bus::batch([])->name('Jana Gred')->dispatch();
+            foreach ($students as $student) {
+                $batch2->add(new ProcessGradeAcademic($student));
+//                ProcessMarksAcademic::dispatch($student);
+            }
+
         } catch (Exception $e) {
             return back()->withError($e->getMessage());
         }
 
-        return back()->with('success', 'Gred akademik berjaya dijana.');
+//        return redirect('grade/academics?batch_id=' . $batch->id);
+        return redirect('grade/academics?batch_id=' . $batch->id . '&batch2_id=' . $batch2->id);
     }
+
+    // stable version
+//    public function store(
+//        Request $request,
+//        GetStudentsAction $studentsAction,
+//        MarksAcademicService $marksAcademicService,
+//        SetGradeAction $gradeAction
+//    ) {
+//        try {
+//            $students = $studentsAction->handle($request);
+//            $marksAcademicService->handle($students);
+//            $gradeAction->handle($students);
+//
+//        } catch (Exception $e) {
+//            return back()->withError($e->getMessage());
+//        }
+//
+//        return back()->with('success', 'Gred akademik berjaya dijana.');
+//
+//    }
 }

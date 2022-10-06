@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Jobs\ProcessMarksAcademic;
 use Exception;
+use Illuminate\Support\Facades\Bus;
 
 /*
 |--------------------------------------------------------------------------
@@ -22,13 +23,20 @@ class MarksAcademicService
     /**
      * @throws Exception
      */
-    public function handle(object $students): bool
+    public function handle(object $students)
     {
+        $batch = Bus::batch([])->dispatch();
+
         foreach ($students as $student) {
-            ProcessMarksAcademic::dispatch($student);
+            $batch->add(new ProcessMarksAcademic($student));
+//            ProcessMarksAcademic::dispatch($student);
         }
 
-        return true;
+//        return true;
+//        return redirect()
+//        return redirect()->route('grade.academics.create');
+
+//        return $batch;
     }
 
 }

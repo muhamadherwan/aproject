@@ -5,6 +5,7 @@ namespace App\Jobs;
 use App\Models\ConfigGradeAcademic;
 use App\Models\Grade;
 use App\Models\MarksAcademic;
+use Illuminate\Bus\Batchable;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -30,6 +31,7 @@ class ProcessGradeAcademic implements ShouldQueue
     use InteractsWithQueue;
     use Queueable;
     use SerializesModels;
+    use Batchable;
 
     public object $student;
 
@@ -72,6 +74,8 @@ class ProcessGradeAcademic implements ShouldQueue
             };
 
             $gradeRow = Grade::where('students_details_fk', $this->student->id)->count();
+
+//            dd($gradeRow);
 
             if ($gradeRow == 0) {
                 Grade::create(['students_details_fk' => $this->student->id]);
