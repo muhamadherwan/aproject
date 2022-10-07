@@ -2,10 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Actions\SetGradeAction;
 use App\Jobs\ProcessGradeAcademic;
 use App\Jobs\ProcessMarksAcademic;
-use App\Services\MarksAcademicService;
 use Exception;
 use App\Actions\GetStudentsAction;
 use App\Models\College;
@@ -17,7 +15,6 @@ use App\Models\ConfigYear;
 use App\Models\Course;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Bus;
-
 
 /*
 |--------------------------------------------------------------------------
@@ -36,6 +33,7 @@ class GradeAcademicController extends Controller
     public function create(Request $request)
     {
         $batch = null;
+
         if ($request->batch_id) {
             $batch = Bus::findBatch($request->batch_id);
         }
@@ -80,6 +78,5 @@ class GradeAcademicController extends Controller
 
         return redirect('grade/academics?batch_id=' . $batch->id . '&batch2_id=' . $batch2->id);
     }
-
 
 }
