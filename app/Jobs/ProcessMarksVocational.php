@@ -17,7 +17,7 @@ use Exception;
 
 /*
 |--------------------------------------------------------------------------
-| Set Student Vocational Module Total Mark Job Queue Job v1.1.0
+| Set Student Vocational Module Total Mark Queue Job v1.1.0
 |--------------------------------------------------------------------------
 |
 | Set vocational module total mark based on semester
@@ -36,15 +36,20 @@ class ProcessMarksVocational implements ShouldQueue
     use Batchable;
 
     public object $student;
+    public $year;
+    public $semester;
 
     /**
      * Create a new job instance.
      *
      * @return void
      */
-    public function __construct($student)
+    public function __construct($student, $year, $semester)
     {
         $this->student = $student;
+        $this->year = $year;
+        $this->semester = $semester;
+//        dd($this->year, $this->semester);
     }
 
     /**
@@ -57,6 +62,17 @@ class ProcessMarksVocational implements ShouldQueue
     {
         $collection = MarksVocational::where('students_details_fk', $this->student->id)->get();
         $this->store($collection);
+
+        $modules = MarksVocational::where('students_details_fk', $this->student->id)
+            ->count();
+
+        $total = MarksVocational::where('students_details_fk', $this->student->id)
+            ->sum('total_marks');
+
+        $totalVocational = ceil($total / $modules);
+
+        Grade::where('students_details_fk', $this->student->id)
+            ->update(['total_vocational' => $totalVocational]);
     }
 
     /**
@@ -110,27 +126,39 @@ class ProcessMarksVocational implements ShouldQueue
                 $markBTeori = $marks[0]->mark_b_teori ?? 0;
                 $markBAmali = $marks[0]->mark_b_amali ?? 0;
                 $markATeori = $marks[0]->mark_a_teori ?? 0;
-                $markAAmali = $marks[0]->mark_b_amali ?? 0;
+                $markAAmali = $marks[0]->mark_a_amali ?? 0;
 
                 $modules = $this->getModules($collect->modules_fk);
 
-                $totalBTeori = ceil(($markBTeori / 100) * $modules[0]->b_teori);
-                $totalBAmali = ceil(($markBAmali / 100) * $modules[0]->b_amali);
-                $totalATeori = ceil(($markATeori / 100) * $modules[0]->a_teori);
-                $totalAAmali = ceil(($markAAmali / 100) * $modules[0]->a_amali);
+//                $totalBTeori = ceil(($markBTeori / 100) * $modules[0]->b_teori);
+//                $totalBAmali = ceil(($markBAmali / 100) * $modules[0]->b_amali);
+//                $totalATeori = ceil(($markATeori / 100) * $modules[0]->a_teori);
+//                $totalAAmali = ceil(($markAAmali / 100) * $modules[0]->a_amali);
+
+                $totalBTeori = ($markBTeori / 100) * $modules[0]->b_teori;
+
+                $totalBAmali = ($markBAmali / 100) * $modules[0]->b_amali;
+
+                $totalATeori = ($markATeori / 100) * $modules[0]->a_teori;
+                $totalAAmali = ($markAAmali / 100) * $modules[0]->a_amali;
 
                 // untuk pengiraan is_vocational_pb
                 $scorePB_Teori = $scorePB_Teori + $totalBTeori;
                 $scorePB_Amali = $scorePB_Amali + $totalBAmali;
-                $scorePA_Teori = $scorePA_Teori = $totalATeori;
-                $scorePA_Amali = $scorePA_Amali = $totalAAmali;
+                $scorePA_Teori = $scorePA_Teori + $totalATeori;
+                $scorePA_Amali = $scorePA_Amali + $totalAAmali;
 
                 if ($countModule == 1) {
                     $scorePA_Teori = $scorePA_Teori + $totalATeori;
                     $scorePA_Amali = $scorePA_Amali + $totalAAmali;
 
-                    $scoresPA = ConfigScoreVocational::where('year', 2022)
-                        ->where('semester', 1)
+//                    $scoresPA = ConfigScoreVocational::where('year', 2022)
+//                    $scoresPA = ConfigScoreVocational::where('year', 2020)
+//                        ->where('semester', 1)
+//                        ->get();
+
+                    $scoresPA = ConfigScoreVocational::where('year',$this->year)
+                        ->where('semester', $this->semester)
                         ->get();
 
                     foreach ($scoresPA as $scorePA) {
@@ -150,15 +178,21 @@ class ProcessMarksVocational implements ShouldQueue
 
                 $totalMarks = $totalBTeori + $totalBAmali + $totalATeori + $totalAAmali;
 
+
                 MarksVocational::where('students_details_fk', $collect->students_details_fk)
                     ->where('modules_fk', $collect->modules_fk)
-                    ->update(['total_marks' => $totalMarks]);
+                    ->update(['total_marks' => ceil($totalMarks)]);
             }
         }
 
         if ($is_vocational_pb == 1) {
-            $scoresPB = ConfigScoreVocational::where('year', 2022)
-                ->where('semester', 1)
+//            $scoresPB = ConfigScoreVocational::where('year', 2022)
+//            $scoresPB = ConfigScoreVocational::where('year', 2020)
+//                ->where('semester', 1)
+//                ->get();
+
+            $scoresPB = ConfigScoreVocational::where('year',$this->year)
+                ->where('semester', $this->semester)
                 ->get();
 
             $totalScorePB = ($scorePB_Teori / $countModule) + ($scorePB_Amali / $countModule);
@@ -170,11 +204,13 @@ class ProcessMarksVocational implements ShouldQueue
             }
         }
 
-        if ($is_total_vocational == 1) {
-            $totalScoreVocational = (($scorePB_Teori + $scorePB_Amali) / $countModule) + ($scorePA_Teori + $scorePA_Amali) / $countModule;
-            Grade::where('students_details_fk', $collect->students_details_fk)
-                ->update(['total_vocational' => ceil($totalScoreVocational)]);
-        }
+//        if ($is_total_vocational == 1) {
+//            $totalScoreVocational = (($scorePB_Teori + $scorePB_Amali) / $countModule) + ($scorePA_Teori + $scorePA_Amali) / $countModule;
+//
+//
+////            Grade::where('students_details_fk', $collect->students_details_fk)
+////                ->update(['total_vocational' => ceil($totalScoreVocational)]);
+//        }
 
         if ($is_vocational_pb == 0 || $is_vocational_paa == 0 || $is_vocational_pat == 0) {
             Grade::where('students_details_fk', $collect->students_details_fk)

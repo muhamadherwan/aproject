@@ -106,10 +106,11 @@ class ProcessGradeVocational implements ShouldQueue
             MarksVocational::where('students_details_fk', $this->student->id)
                 ->where('modules_fk', $module->modules_fk)
                 ->update(['is_graded' => 1]);
+
         }
 
         $grades_vocational = Grade::where('students_details_fk', $this->student->id)
-            ->select('is_vocational_pb', 'is_vocational_paa', 'is_vocational_pat', 'is_competent', 'total_vocational')
+            ->select(['is_vocational_pb', 'is_vocational_paa', 'is_vocational_pat', 'is_competent', 'total_vocational'])
             ->get();
 
         // zz code.

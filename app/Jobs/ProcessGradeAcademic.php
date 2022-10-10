@@ -53,7 +53,7 @@ class ProcessGradeAcademic implements ShouldQueue
     public function handle()
     {
         $subjects = MarksAcademic::where('students_details_fk', $this->student->id)
-            ->where('is_graded', '=', 0)
+//            ->where('is_graded', '=', 0)
             ->orderBy('subject_academics_fk', 'ASC')
             ->get(['subject_academics_fk', 'total_marks']);
 

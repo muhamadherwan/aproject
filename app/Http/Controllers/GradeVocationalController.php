@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Actions\GetStudentsAction;
+use App\Actions\GradeVocationalAction;
 use App\Jobs\ProcessGradeVocational;
 use App\Jobs\ProcessMarksVocational;
 use App\Models\College;
@@ -12,6 +13,7 @@ use App\Models\ConfigSession;
 use App\Models\ConfigState;
 use App\Models\ConfigYear;
 use App\Models\Course;
+use App\Services\MarksVocationalService;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Bus;
@@ -59,12 +61,17 @@ class GradeVocationalController extends Controller
         Request $request,
         GetStudentsAction $studentsAction
     ) {
+//        dd($request);
         try {
             $students = $studentsAction->handle($request);
+            $year = $request->year;
+            $semester = $request->semester;
+
+//            dd($year, $semester);
 
             $batch = Bus::batch([])->name('Jana Markah')->dispatch();
             foreach ($students as $student) {
-                $batch->add(new ProcessMarksVocational($student));
+                $batch->add(new ProcessMarksVocational($student, $year, $semester));
             }
 
             $batch2 = Bus::batch([])->name('Jana Gred')->dispatch();
@@ -76,7 +83,7 @@ class GradeVocationalController extends Controller
             return back()->withError($e->getMessage());
         }
 
-        return redirect('grade/academics?batch_id=' . $batch->id . '&batch2_id=' . $batch2->id);
+        return redirect('grade/vocationals?batch_id=' . $batch->id . '&batch2_id=' . $batch2->id);
     }
 
     // old is gold
@@ -92,7 +99,7 @@ class GradeVocationalController extends Controller
 //            'courses' => Course::get(["id", "code", "name"])
 //        ]);
 //    }
-
+//
 //    public function store(
 //        Request $request,
 //        GetStudentsAction $studentsAction,
