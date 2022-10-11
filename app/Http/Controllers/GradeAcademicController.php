@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Jobs\ProcessGradeAcademic;
 use App\Jobs\ProcessMarksAcademic;
 use Exception;
+use App\Models\MarksAcademic;
 use App\Actions\GetStudentsAction;
 use App\Models\College;
 use App\Models\ConfigCollegesType;
@@ -58,14 +59,15 @@ class GradeAcademicController extends Controller
 
     public function store(
         Request $request,
-        GetStudentsAction $studentsAction
+        GetStudentsAction $studentsAction,
+        MarksAcademic $markAcademic
     ) {
         try {
             $students = $studentsAction->handle($request);
 
             $batch = Bus::batch([])->name('Jana Markah')->dispatch();
             foreach ($students as $student) {
-                $batch->add(new ProcessMarksAcademic($student));
+                $batch->add(new ProcessMarksAcademic($student, $markAcademic));
             }
 
             $batch2 = Bus::batch([])->name('Jana Gred')->dispatch();

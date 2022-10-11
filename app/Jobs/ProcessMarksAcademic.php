@@ -10,20 +10,20 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-
 use App\Models\StudentsDetail;
 use App\Models\SubjectAcademicsDetail;
 use Exception;
+use Ramsey\Collection\Collection;
 
 /*
 |--------------------------------------------------------------------------
-| Set Academics Subject Total Mark Queue Job v1.3.0
+| Set Academics Subject Total Mark Queue Job v3.1.0
 |--------------------------------------------------------------------------
 |
 | Set academic subject total mark based on semester
 | and dispatch to job queue for stored in db process.
 | Author:mdherwan@gmail.com
-| Created: 05 Oct 2022.
+| Created: 11 Oct 2022.
 |
 */
 
@@ -35,16 +35,23 @@ class ProcessMarksAcademic implements ShouldQueue
     use SerializesModels;
     use Batchable;
 
-    public object $student;
+    private object $student;
+    private int $semester;
+    private MarksAcademic $markAcademic;
+    private array|Collection $agama;
 
     /**
      * Create a new job instance.
      *
      * @return void
      */
-    public function __construct($student)
+    public function __construct(object $student, MarksAcademic $markAcademic)
     {
         $this->student = $student;
+        $this->semester = $student->semester;
+        $this->markAcademic = $markAcademic;
+        $this->agama = $this->markAcademic->where('students_details_fk', $this->student->id)
+            ->where('subject_academics_fk', '6')->get('id');
     }
 
     /**
@@ -55,29 +62,36 @@ class ProcessMarksAcademic implements ShouldQueue
      */
     public function handle()
     {
-        $bm = (4 != $this->student->semester) ? $this->create($this->student, 1) : $this->createBMSetara(
-            $this->student
-        );
-        $bi = $this->create($this->student, 2);
-        $mt = $this->create($this->student, 3);
-        $sn = $this->create($this->student, 4);
-        $sj = (4 != $this->student->semester) ? $this->create($this->student, 5) : $this->createSJSetara(
-            $this->student
-        );
+        $bm = (4 != $this->semester) ? $this->create(1) : $this->createBMSetara();
+        $bi = $this->create(2);
+        $mt = $this->create(3);
+        $sn = $this->create(4);
+        $sj = (4 != $this->semester) ? $this->create(5) : $this->createSJSetara();
+        $this->agama->isEmpty() ? $this->create(7) : $this->create(6);
 
-        $collection = MarksAcademic::where('students_details_fk', $this->student->id)->where(
-            'subject_academics_fk',
-            '6'
-        )->get('id');
-
-        $agama = $collection->isEmpty() ? $this->create($this->student, 7) : $this->create($this->student, 6);
+        /**
+         * $subjects = $this->markAcademic->where('students_details_fk', $this->student->id)->get('subject_academics_fk');
+         * using relationship:
+         * $this->markAcademic->subjects->each(function($subject)
+         *{
+         *      if $this->semester != 4 {
+         *          match ($student->subject) {
+                        1, 2, 3, 5, 7 => $this->store1($student),
+                        4, 6 => $this->store2($student),
+                    };
+         *      }
+         *
+         *     if      
+         *
+         * });
+         */
     }
 
     /**
      * @throws Exception
      */
     private function create(object $student, int $subject): bool
-    {
+    {i
         $student->subject = $subject;
 
         match ($student->subject) {

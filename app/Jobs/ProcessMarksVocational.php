@@ -17,7 +17,7 @@ use Exception;
 
 /*
 |--------------------------------------------------------------------------
-| Set Student Vocational Module Total Mark Queue Job v1.1.0
+| Set Student Vocational Module Total Mark Queue Job v3.1.0
 |--------------------------------------------------------------------------
 |
 | Set vocational module total mark based on semester
